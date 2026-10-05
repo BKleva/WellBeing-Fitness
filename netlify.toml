@@ -1,0 +1,227 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/private-fitness"
+  to = "/personal-training/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/yoga-mindfulness"
+  to = "/classes/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/yoga-minfulness-class-schedule"
+  to = "/classes/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/group-conditioning-classes"
+  to = "/classes/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/class-descriptions"
+  to = "/classes/#styles"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/trainers"
+  to = "/team/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/copy-of-trainers-and-instructors"
+  to = "/locations/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/nutrition"
+  to = "/nutrition-coaching/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/fuel-your-life"
+  to = "/nutrition-coaching/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/kitchen-consultation-clean-out"
+  to = "/nutrition-coaching/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/meal-planning"
+  to = "/nutrition-coaching/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/women-wellness"
+  to = "/womens-wellness/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/copy-of-women-s-health-peri-menopause"
+  to = "/oncology-exercise/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/recovery-therapeutics"
+  to = "/recovery/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/copy-of-recovery-therapeutics"
+  to = "/recovery/#assisted-stretch"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/reiki"
+  to = "/recovery/#reiki"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/physical-therapy"
+  to = "/recovery/#physical-therapy"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/private-pilates"
+  to = "/pilates/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/corporate"
+  to = "/corporate-wellness/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/services-9"
+  to = "/memberships/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/special-events"
+  to = "/events/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/fit-shop"
+  to = "/shop/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/studio-and-program-policies"
+  to = "/policies/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/testimonials"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/our-services"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/general-1"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/fitness"
+  to = "/personal-training/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/summerprograms"
+  to = "/events/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/fall-outdoor-programs"
+  to = "/events/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/online-offerings"
+  to = "/classes/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/fitplay-with-caregiver"
+  to = "/events/"
+  status = 301
+  force = true
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+
+[[redirects]]
+  from = "/assets/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/tools/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
