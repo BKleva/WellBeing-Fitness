@@ -479,7 +479,7 @@ def page_home(shop):
   <div class="kickrow reveal"><p class="kicker kicker--light">What we offer</p><a class="link link--light" href="/offer/">All classes &amp; services {ICON["arrow"]}</a></div>
   <ol class="index reveal">{index}</ol>
 </div></section>
-{marquee(["Start where you are", "Stay for the whole life"], dark=True)}
+{marquee(["Start where you are", "Rise stronger"], dark=True)}
 
 <section class="section" id="memberships"><div class="wrap">
   <div class="kickrow reveal"><p class="kicker">Memberships &amp; passes</p><a class="link" href="/memberships/">Compare all plans {ICON["arrow"]}</a></div>
