@@ -183,6 +183,9 @@ def head(title, desc, path, og_img="/images/og-card.jpg", schema=None, noindex=F
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
+<div id="preloader" aria-hidden="true"><svg viewBox="0 0 100 60" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M50 6 C58 18 58 34 50 46 C42 34 42 18 50 6Z"/><path d="M50 46 C34 44 24 32 22 16 C36 20 46 30 50 46Z"/><path d="M50 46 C66 44 76 32 78 16 C64 20 54 30 50 46Z"/><path d="M50 46 C30 50 12 44 4 30 C20 28 38 34 50 46Z"/><path d="M50 46 C70 50 88 44 96 30 C80 28 62 34 50 46Z"/><path d="M20 53 H80"/></svg></div>
+<script>(function(){{var d=document.documentElement,t=Date.now(),p=document.getElementById("preloader"),n=0;function go(){{if(n++)return;if(p){{p.classList.add("is-out");setTimeout(function(){{p.remove()}},500)}}d.classList.add("is-ready")}}
+if(matchMedia("(prefers-reduced-motion: reduce)").matches){{go()}}else{{addEventListener("load",function(){{setTimeout(go,Math.max(0,650-(Date.now()-t)))}});setTimeout(go,3500)}}}})()</script>
 """
 
 
@@ -279,7 +282,20 @@ def asset_version():
     return h.hexdigest()[:8]
 
 
+MARQUEE_WORDS = {"/offer/": ["Classes", "Training", "Wellness"], "/schedule/": ["Reserve", "Breathe", "Move"], "/memberships/": ["Passes", "Memberships", "Private training"],
+                 "/team/": ["Meet your guides", "Teachers", "Coaches"], "/events/": ["Gather", "Learn", "Grow together"], "/classes/": ["Yoga", "Pilates", "Barre"]}
+
+
+def add_marquee(path, content):
+    if '<section class="page-hero' not in content:
+        return content
+    i = content.index('<section class="page-hero')
+    j = content.index("</section>", i) + len("</section>")
+    return content[:j] + chr(10) + marquee(MARQUEE_WORDS.get(path, ["Breathe", "Move", "Restore"])) + content[j:]
+
+
 def write(path, content):
+    content = add_marquee(path, content)
     content = re.sub(r'((?:href|src)=")(/(?:css|js)/[\w.-]+\.(?:css|js))(")', rf"\1\2?v={asset_version()}\3", content)
     full = os.path.join(ROOT, path.strip("/"), "index.html") if not path.endswith(".html") else os.path.join(ROOT, path.strip("/"))
     os.makedirs(os.path.dirname(full), exist_ok=True)
