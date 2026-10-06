@@ -853,3 +853,11 @@ body.menu-open .reservebar { display: none; }
   .minis--six { grid-template-columns: repeat(2, 1fr); }
   .marquee span { font-size: 0.7rem; }
 }
+
+/* hero photo: shifted down (shows more of the room's upper wall) and brighter */
+.hero-full__img img { object-position: center 0%; opacity: 1; filter: brightness(1.12) saturate(1.05); }
+.hero-full::after { background: linear-gradient(180deg, rgba(8, 12, 30, 0.45) 0%, rgba(8, 12, 30, 0.08) 30%, rgba(8, 12, 30, 0.12) 62%, rgba(8, 12, 30, 0.5) 100%); }
+.hero-full h1, .hero-full__foot p { text-shadow: 0 2px 22px rgba(8, 12, 30, 0.55); }
+.hero-full::after { background: linear-gradient(180deg, rgba(8, 12, 30, 0.45) 0%, rgba(8, 12, 30, 0.2) 30%, rgba(8, 12, 30, 0.26) 62%, rgba(8, 12, 30, 0.55) 100%); }
+.hero-full h1 { text-shadow: 0 2px 26px rgba(8, 12, 30, 0.75), 0 0 2px rgba(8, 12, 30, 0.35); }
+.hero-full .h1b { color: #cfdcff; }
