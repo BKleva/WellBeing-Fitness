@@ -668,3 +668,5 @@ h1 { font-weight: 300; }
 @media (max-width: 760px) { .hero__backdrop { opacity: 0.22; } }
 h1 em, h2 em { color: var(--ink); font-weight: 500; }
 .section--forest h2 em, .section--forest h1 em, .radiance h2 em { color: var(--clay-soft); }
+
+.eyebrow--light { color: #fff; }
