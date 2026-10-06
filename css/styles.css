@@ -661,3 +661,10 @@ h1 { font-weight: 300; }
 @keyframes hb-ripple { from { transform: translateX(-6px); } to { transform: translateX(6px); } }
 @media (max-width: 760px) { .hero__backdrop { width: 120vw; right: -48vw; top: 62%; opacity: 0.55; } }
 @media (prefers-reduced-motion: reduce) { .hb-rings circle, .hb-sun, .hb-reflect, .hb-waves path { animation: none; } }
+
+/* quieter backdrop, black accent words */
+.hero__backdrop { opacity: 0.36; }
+.hb-sun { opacity: 0.6; }
+@media (max-width: 760px) { .hero__backdrop { opacity: 0.22; } }
+h1 em, h2 em { color: var(--ink); font-weight: 500; }
+.section--forest h2 em, .section--forest h1 em, .radiance h2 em { color: var(--clay-soft); }
