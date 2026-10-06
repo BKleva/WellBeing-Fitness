@@ -502,7 +502,7 @@ def page_home(shop):
 def page_service(s):
     path = f"/{s['slug']}/"
     cr, cr_ld = crumbs([("Services", "/#services"), (s["nav"], path)])
-    faq, faq_ld = faq_block(s["faq"], f"{s['card']}: common questions")
+    faq, faq_ld = faq_block(s["faq"][:2], f"{s['card']}: common questions")
     svc_ld = {"@context": "https://schema.org", "@type": "Service", "name": s["card"], "serviceType": s["card"], "description": s["desc"],
               "url": SITE + path, "provider": {"@id": SITE + "/#org"},
               "areaServed": [{"@type": "City", "name": "Westford, MA"}, {"@type": "City", "name": "Groton, MA"}]}
@@ -514,7 +514,7 @@ def page_service(s):
 
     secs = ""
     for sh, paras in s["sections"]:
-        secs += f'<section class="prose reveal"><h2>{esc(sh)}</h2>{"".join(f"<p>{p}</p>" for p in paras)}</section>'
+        secs += f'<section class="prose reveal"><h2>{esc(sh)}</h2>{"".join(f"<p>{p}</p>" for p in paras[:1])}</section>'
     if s["focus"]:
         secs += f'<section class="prose reveal"><h3 class="h4">Areas of focus</h3><ul class="chips">{"".join(f"<li>{esc(x)}</li>" for x in s["focus"])}</ul></section>'
     if s.get("includes"):
@@ -565,7 +565,7 @@ def page_service(s):
 </section>
 <section class="section section--tight">
   <div class="wrap detail">
-    <div class="detail__main">{secs}{steps}</div>
+    <div class="detail__main">{secs}</div>
     <aside class="detail__side reveal"><div class="sidecard"><h3>{consult_title}</h3><p>Talk with our team about your goals. The first conversation is always free.</p>
       <a class="btn btn--block" href="/contact/{q}">Request a consultation</a>
       <a class="btn btn--ghost btn--block" href="{SCHEDULE_URL}">See class schedule</a>
@@ -578,7 +578,6 @@ def page_service(s):
 {reformer}
 <section class="section section--tight"><div class="wrap"><p class="eyebrow">Your team</p><ul class="names reveal">{team}</ul></div></section>
 {faq}
-{cta_band(interest=s["interest"])}
 """
     write(path, h + body + footer() + close())
 
@@ -602,7 +601,7 @@ def page_classes():
     title = "Yoga & Pilates Classes, Westford & Groton MA | WellBeing"
     desc = "Yoga, Pilates & Barre classes in Westford and Groton, MA for every level. Slow Flow, Restorative, Yin, Pilates Mat, Barre & more. See the live schedule."
     cr, cr_ld = crumbs([("Classes", path)])
-    faq, faq_ld = faq_block(POLICY_FAQ[:5] + [HOME_FAQ[3]], "Your first visit, covered")
+    faq, faq_ld = faq_block(POLICY_FAQ[:3], "Your first visit, covered")
     cls_ld = {"@context": "https://schema.org", "@type": "ItemList", "name": "Group class styles at WellBeing Fitness",
               "itemListElement": [{"@type": "ListItem", "position": i, "name": c["name"], "description": c["text"]} for i, c in enumerate(CLASS_STYLES, 1)]}
     h = head(title, desc, path, og_img=og("class-warrior"), schema=[cr_ld, faq_ld, cls_ld], preload="/images/class-warrior-800.webp") + header("classes")
@@ -633,7 +632,6 @@ def page_classes():
 <section class="section"><div class="wrap"><div class="section__head reveal"><p class="eyebrow">Your teachers</p><h2>Yoga, Pilates &amp; Barre <em>instructors.</em></h2></div>
 <ul class="names reveal">{inst}</ul></div></section>
 {faq}
-{cta_band("Not sure where to begin?", "Tell us what you're looking for and we'll recommend the right class, level and studio.")}
 """
     write(path, h + body + footer() + close())
 
