@@ -134,6 +134,12 @@
     });
   });
 
+  var want = new URLSearchParams(location.search).get("type");
+  if (want && root.querySelector('[data-seg="type"] [data-v="' + want + '"]')) {
+    state.type = want;
+    root.querySelectorAll('[data-seg="type"] [data-v]').forEach(function (x) { x.classList.toggle("is-on", x.getAttribute("data-v") === want); });
+  }
+
   buildStrip();
   // open on the first day that still has classes
   for (var j = 0; j < days.length; j++) { if (visibleFor(iso(days[j])).items.length) { state.day = iso(days[j]); break; } }

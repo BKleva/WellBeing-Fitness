@@ -245,7 +245,6 @@ def footer(bar=True):
   <div class="wrap footer__main">
     <div class="footer__brand">
       <img src="/images/logo-white.png" alt="{NAME}" width="168" height="40" loading="lazy">
-      <p>Yoga, Pilates, Barre, training, nutrition and recovery in Westford and Groton, MA.</p>
       <div class="social">{soc}</div>
     </div>
     <div class="footer__cols">
@@ -399,8 +398,18 @@ def page_home(shop):
     h = h.replace("<body>", '<body class="is-home">', 1)
     h += header()
 
-    rows = [("/classes/", "Yoga, Pilates & Barre", "Group classes in Westford and Groton")] + [(f"/{x['slug']}/", x["card"], x["short"]) for x in SERVICES]
-    index = "".join(f'<li><a href="{u}"><span class="index__n">{i:02d}</span><strong>{esc(n)}</strong><em>{esc(d)}</em>{ICON["arrow"]}</a></li>' for i, (u, n, d) in enumerate(rows, 1))
+    index = "".join(f'<li><a class="index__main" href="/{x["slug"]}/"><span class="index__n">{i:02d}</span><strong>{esc(x["card"])}</strong><em>{esc(x["short"])}</em></a>'
+                    f'<a class="index__go" href="/contact/{qs(x["interest"])}">Sign up {ICON["arrow"]}</a></li>' for i, x in enumerate(SERVICES, 1))
+
+    def first_sentence(t):
+        t = t.split(". ")[0].rstrip(".")
+        return t if len(t) < 120 else t[:117].rsplit(" ", 1)[0] + "…"
+    groups = [("yoga", "Yoga"), ("pilates", "Pilates & Barre")]
+    cls_html = ""
+    for g, label in groups:
+        rows_ = "".join(f'<li><div><strong>{esc(c["name"])}</strong><span class="lvl">{esc(c["level"])}</span><p>{esc(first_sentence(c["text"]))}</p></div>'
+                        f'<a class="index__go index__go--dark" href="{SCHEDULE_URL}?type={g}">Reserve {ICON["arrow"]}</a></li>' for c in CLASS_STYLES if c["group"] == g)
+        cls_html += f'<h3 class="offer__group reveal">{label}</h3><ul class="offer reveal">{rows_}</ul>'
 
     plan = {p["id"]: p for p in PLANS_GROUP}
     pick = [("New to WellBeing", "One-month trial", TRIAL["price"], "one month, any class", MB_LINK["pass"]),
@@ -439,22 +448,13 @@ def page_home(shop):
 </section>
 {marquee(["Breathe", "Move", "Restore"])}
 
-<section class="statement"><div class="wrap statement__grid">
-  <div class="statement__copy reveal">
-    <p class="kicker">Our philosophy</p>
-    <h2>Wellness that fits your whole life.</h2>
-    <div class="poem">
-      <p>Every client is an individual.<br>Their own goals.<br>Their own health history.<br>Their own fitness level.</p>
-      <p>That is the key to results<br>that last a lifetime.</p>
-      <p>Yoga, Pilates, Barre, training, nutrition and recovery, under one roof, guided by specialists, at any age and any stage.</p>
-    </div>
-    <p class="statement__by">Founded by Scott Cassa, a fitness trainer for more than twenty years.</p>
-  </div>
-  <div class="statement__img reveal"><div class="plainimg">{pic("studio-yoga-light", "Bright WellBeing yoga room with mats and props", "(min-width:900px) 40vw, 90vw")}</div></div>
+<section class="section" id="classes"><div class="wrap">
+  <div class="kickrow reveal"><p class="kicker">What we offer · Group classes</p><a class="link" href="{SCHEDULE_URL}">Full schedule {ICON["arrow"]}</a></div>
+  {cls_html}
 </div></section>
 
 <section class="section section--ink" id="services"><div class="wrap">
-  <p class="kicker kicker--light reveal">What we offer</p>
+  <p class="kicker kicker--light reveal">More ways to work with us</p>
   <ol class="index reveal">{index}</ol>
 </div></section>
 {marquee(["Start where you are", "Stay for the whole life"], dark=True)}
