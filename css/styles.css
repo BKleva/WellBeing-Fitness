@@ -685,3 +685,6 @@ h1 em, h2 em { color: var(--ink); font-weight: 500; }
 .hb-rev { animation: hb-rot 140s linear infinite reverse; }
 @keyframes hb-rot { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .hb-slow, .hb-rev { animation: none; } }
+
+/* mobile: mandala tucked into the top-right corner of the hero */
+@media (max-width: 760px) { .hero__backdrop { width: 90vw; right: -34vw; top: -18vw; transform: none; opacity: 0.26; } }
