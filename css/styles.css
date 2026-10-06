@@ -924,3 +924,18 @@ body.menu-open .reservebar { display: none; }
   .footer__brand { display: block; }
   .footer__social { justify-content: center; padding-top: 0.9rem; border-top: 1px solid rgba(255, 255, 255, 0.12); }
 }
+
+/* compact desktop footer: one row */
+@media (min-width: 721px) {
+  .site-footer { padding-top: 1.4rem; font-size: 0.84rem; }
+  .footer__main { display: flex; align-items: flex-start; justify-content: space-between; gap: 2.5rem; padding-bottom: 1rem; }
+  .footer__brand img { width: 130px; }
+  .footer__cols { flex: 1; max-width: 760px; grid-template-columns: 1fr 1fr 1.2fr; gap: 1.5rem; }
+  .footer__cols > div:last-child ul { columns: 1; }
+  .site-footer h3 { margin-bottom: 0.45rem; }
+  .site-footer li { margin-bottom: 0.15rem; }
+  .site-footer address { margin-bottom: 0.4rem; line-height: 1.4; }
+  .footer__social { grid-column: auto; flex: none; }
+  .footer__base { padding: 0.65rem 0 0.8rem; font-size: 0.76rem; }
+}
+@media (min-width: 721px) { .footer__cols { grid-template-columns: 1fr 1fr 1.5fr; } .footer__cols > div:last-child ul { columns: 2; column-gap: 1.2rem; } }
