@@ -382,8 +382,7 @@ def page_home(shop):
            "email": EMAIL, "founder": {"@type": "Person", "name": "Scott Cassa"}, "sameAs": list(SOCIAL.values()),
            "description": desc}
     site = {"@context": "https://schema.org", "@type": "WebSite", "@id": SITE + "/#website", "url": SITE + "/", "name": NAME, "publisher": {"@id": SITE + "/#org"}}
-    h = head(title, desc, "/", schema=[org, site] + [dict(l, **{"@context": "https://schema.org"}) for l in org_ld()],
-             preload="/images/studio-om-room-800.webp")
+    h = head(title, desc, "/", schema=[org, site] + [dict(l, **{"@context": "https://schema.org"}) for l in org_ld()])
     h += header()
 
     classes_card = f"""<a class="card card--text card--feature card--classes reveal" href="/classes/">
@@ -401,7 +400,7 @@ def page_home(shop):
   <a class="link" href="https://www.google.com/maps/dir/?api=1&destination={l['map_q']}" target="_blank" rel="noopener">Get directions {ICON["external"]}</a></div></div></article>"""
 
     body = f"""
-<section class="hero">
+<section class="hero hero--text">
   <div class="wrap hero__grid">
     <div class="hero__copy">
       <p class="eyebrow reveal">Westford &amp; Groton, Massachusetts</p>
@@ -409,10 +408,6 @@ def page_home(shop):
       <p class="lede reveal">Yoga, Pilates, Barre, personal training, nutrition and recovery under one roof. Guided by a team of specialists who see you as an individual, at any age and any stage of your health journey.</p>
       <div class="hero__btns reveal"><a class="btn btn--lg" href="{SCHEDULE_URL}">Register for a class {ICON["arrow"]}</a>
       <a class="btn btn--ghost btn--lg" href="/contact/">Free consultation</a></div>
-    </div>
-    <div class="hero__art">
-      <div class="arch reveal">{pic("studio-om-room", "Inside the WellBeing yoga studio: rows of mats, candles and a warm, quiet room", "(min-width:900px) 42vw, 90vw", eager=True)}</div>
-      <div class="hero__logo"><div class="hero__plate reveal"><img src="/images/logo-navy.png" alt="WellBeing Fitness" width="770" height="184"></div></div>
     </div>
   </div>
 </section>

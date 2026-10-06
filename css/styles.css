@@ -144,13 +144,6 @@ body.menu-open .site-header { position: fixed; top: 0; left: 0; right: 0; backgr
 .hero__proof strong { font: 500 2.6rem/1 var(--serif); color: var(--navy); }
 .hero__proof span { font-size: 0.86rem; color: var(--muted); max-width: 12ch; line-height: 1.35; }
 .hero__art { position: relative; justify-self: end; width: min(100%, 520px); }
-.hero__logo { position: absolute; top: 50%; left: 50%; width: 50%; transform: translate(-50%, -50%); z-index: 2; pointer-events: none; }
-.hero__plate { padding: 0.9rem 1.2rem; border-radius: 6px; background: rgba(247, 242, 234, 0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 22px 44px -16px rgba(15, 29, 77, 0.55); border: 1px solid rgba(255, 255, 255, 0.7); }
-.hero__plate img { width: 100%; height: auto; }
-.js .hero__plate.reveal { transform: translateY(26px); }
-.js .hero__plate.reveal.is-in { transform: none; transition-delay: 0.25s; animation: bob 4.5s ease-in-out 1.2s infinite; }
-@keyframes bob-soft { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
 .arch { border-radius: 0; overflow: hidden; aspect-ratio: 4 / 5; box-shadow: var(--shadow-lg); background: var(--sand); }
 .arch img { width: 100%; height: 100%; object-fit: cover; }
 .arch--wide { aspect-ratio: 5 / 5.4; }
@@ -496,8 +489,7 @@ a.plan:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
   html { scroll-behavior: auto; }
   .js .reveal { opacity: 1; transform: none; transition: none; }
   .ticker__track, .hero__badge, .announce__dot { animation: none !important; }
-  .js .hero__plate.reveal.is-in { animation: bob-soft 8s ease-in-out 1.2s infinite; }
-  * { transition-duration: 0.01ms !important; }
+    * { transition-duration: 0.01ms !important; }
 }
 
 /* ---------- Responsive ---------- */
@@ -545,8 +537,7 @@ a.plan:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
   .hero__proof { gap: 1.2rem; }
   .hero__proof strong { font-size: 2.1rem; }
   .hero__badge { right: 0; }
-  .hero__logo { width: 60%; }
-  .announce__more, .announce__dot { display: none; }
+    .announce__more, .announce__dot { display: none; }
   .announce a { padding: 0.55rem 1rem; font-size: 0.82rem; }
   .facts { grid-template-columns: 1fr; }
   .facts div + div { border-left: 0; border-top: 1px solid var(--line); }
@@ -580,12 +571,10 @@ a.plan:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
 
 
 /* ---------- Plain, rectangular imagery ---------- */
-.arch, .collage__a, .sub__img, .studio__img, .poster, .plainimg, .person__img, .hero__plate { border-radius: 0; }
-.arch, .sub__img, .poster, .plainimg { box-shadow: none; }
+.arch, .collage__a, .sub__img, .studio__img, .poster, .plainimg, .person__img { border-radius: 0; box-shadow: none; }
 .arch { aspect-ratio: 4 / 5; }
 .arch--wide { aspect-ratio: 4 / 3; }
 .plainimg img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
-.hero__plate { border-radius: 2px; }
 .mini__img img { object-position: center 18%; }
 .av { border-radius: 3px; }
 .avatar-none { display: none; }
@@ -614,11 +603,10 @@ a.plan:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
 .mini__img { max-width: none; }
 .poster, .poster img { border-radius: 0; }
 .av, .av img { border-radius: 0; }
-.hero__plate { border-radius: 0; }
 
 
 /* ---------- Simplified UI: sharp, quiet, no motion for its own sake ---------- */
-.js .reveal, .js .hero__plate.reveal { opacity: 1; transform: none; transition: none; }
+.js .reveal { opacity: 1; transform: none; transition: none; }
 .section { padding: clamp(3rem, 6vw, 5.5rem) 0; }
 .section--tight { padding: clamp(2rem, 4vw, 3.2rem) 0; }
 .btn, .chip, .seg, .seg button, .tag, .badge, .opt__badge, .ev__price, .names a, .ptabs, .ptab, .day, .freq__b, .burger, .totop, .social a, .cart-fab, .cart-fab__n { border-radius: 2px; }
@@ -629,3 +617,10 @@ a.plan:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
 .opt, .opt__dot, .trial, .field input, .field select, .field textarea, .form .btn { border-radius: 2px; }
 .opt__dot, .opt__dot::after { border-radius: 50%; }
 .site-header.is-stuck { box-shadow: none; }
+
+/* text-only home hero */
+.hero--text { padding: clamp(3.5rem, 8vw, 7rem) 0 clamp(3rem, 6vw, 5rem); }
+.hero--text .hero__grid { grid-template-columns: 1fr; }
+.hero--text .hero__copy { max-width: 980px; }
+.hero--text h1 { font-size: clamp(3rem, 7.4vw, 6.4rem); }
+.hero--text .lede { max-width: 60ch; }
