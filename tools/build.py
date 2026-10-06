@@ -469,6 +469,12 @@ def page_home(shop):
 </section>
 {marquee(["Breathe", "Move", "Restore"])}
 
+<section class="section section--sand" id="team"><div class="wrap">
+  <div class="kickrow reveal"><p class="kicker">Meet the team</p><a class="link" href="/team/">All {len(TEAM)} of us {ICON["arrow"]}</a></div>
+  <div class="minis minis--six reveal">{team}</div>
+</div></section>
+
+
 <section class="section section--ink" id="services"><div class="wrap">
   <div class="kickrow reveal"><p class="kicker kicker--light">What we offer</p><a class="link link--light" href="/offer/">All classes &amp; services {ICON["arrow"]}</a></div>
   <ol class="index reveal">{index}</ol>
@@ -481,11 +487,6 @@ def page_home(shop):
 </div></section>
 
 {events}
-
-<section class="section section--sand" id="team"><div class="wrap">
-  <div class="kickrow reveal"><p class="kicker">Meet the team</p><a class="link" href="/team/">All {len(TEAM)} of us {ICON["arrow"]}</a></div>
-  <div class="minis minis--six reveal">{team}</div>
-</div></section>
 
 <section class="section" id="studios"><div class="wrap">
   <p class="kicker reveal">Two studios</p>
