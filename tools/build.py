@@ -411,7 +411,10 @@ def class_lists():
     for g, label in [("yoga", "Yoga"), ("pilates", "Pilates & Barre")]:
         rows_ = "".join(f'<li><div><strong>{esc(c["name"])}</strong><span class="lvl">{esc(c["level"])}</span><p>{esc(first_sentence(c["text"]))}</p></div>'
                         f'<a class="index__go index__go--dark" href="{SCHEDULE_URL}?type={g}">Reserve {ICON["arrow"]}</a></li>' for c in CLASS_STYLES if c["group"] == g)
-        out += f'<h3 class="offer__group reveal">{label}</h3><ul class="offer reveal">{rows_}</ul>'
+        img, alt, blurb = {"yoga": ("class-warrior", "Group yoga class in warrior pose", "Slow, strong and restorative practices for every level."),
+                           "pilates": ("pilates-ring", "Pilates class using a ring", "Low-impact strength, core and sculpting work.")}[g]
+        out += (f'<div class="offer__top reveal"><div class="offer__img">{pic(img, alt, "(min-width:900px) 18vw, 40vw")}</div>'
+                f'<div><h3 class="offer__group">{label}</h3><p>{blurb}</p></div></div><ul class="offer reveal">{rows_}</ul>')
     return out
 
 
