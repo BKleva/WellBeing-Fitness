@@ -183,7 +183,7 @@ def head(title, desc, path, og_img="/images/og-card.jpg", schema=None, noindex=F
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<div id="preloader" aria-hidden="true"><svg viewBox="0 0 100 60" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M50 6 C58 18 58 34 50 46 C42 34 42 18 50 6Z"/><path d="M50 46 C34 44 24 32 22 16 C36 20 46 30 50 46Z"/><path d="M50 46 C66 44 76 32 78 16 C64 20 54 30 50 46Z"/><path d="M50 46 C30 50 12 44 4 30 C20 28 38 34 50 46Z"/><path d="M50 46 C70 50 88 44 96 30 C80 28 62 34 50 46Z"/><path d="M20 53 H80"/></svg></div>
+<div id="preloader" aria-hidden="true"><img src="/images/om-mark.png" alt="" width="214" height="188"></div>
 <script>(function(){{var d=document.documentElement,t=Date.now(),p=document.getElementById("preloader"),n=0;function go(){{if(n++)return;if(p){{p.classList.add("is-out");setTimeout(function(){{p.remove()}},500)}}d.classList.add("is-ready")}}
 if(matchMedia("(prefers-reduced-motion: reduce)").matches){{go()}}else{{addEventListener("load",function(){{setTimeout(go,Math.max(0,650-(Date.now()-t)))}});setTimeout(go,3500)}}}})()</script>
 """
@@ -426,7 +426,7 @@ def page_home(shop):
            "email": EMAIL, "founder": {"@type": "Person", "name": "Scott Cassa"}, "sameAs": list(SOCIAL.values()),
            "description": desc}
     site = {"@context": "https://schema.org", "@type": "WebSite", "@id": SITE + "/#website", "url": SITE + "/", "name": NAME, "publisher": {"@id": SITE + "/#org"}}
-    h = head(title, desc, "/", schema=[org, site] + [dict(l, **{"@context": "https://schema.org"}) for l in org_ld()], preload="/images/yoga-class-wide-1400.webp")
+    h = head(title, desc, "/", schema=[org, site] + [dict(l, **{"@context": "https://schema.org"}) for l in org_ld()], preload="/images/heromain-1400.webp")
     h = h.replace("<body>", '<body class="is-home">', 1)
     h += header()
 
@@ -458,7 +458,7 @@ def page_home(shop):
 
     body = f"""
 <section class="hero-full">
-  <div class="hero-full__img">{pic("yoga-class-wide", "WellBeing Fitness yoga studio set with mats, blocks and candles", "100vw", eager=True)}</div>
+  <div class="hero-full__img">{pic("heromain", "WellBeing Fitness yoga studio set with mats, blocks and candles", "100vw", eager=True)}</div>
   <div class="hero-full__copy">
     <h1><span class="h1a">A whole-life approach</span> <span class="h1b">to feeling your best.</span></h1>
   </div>
