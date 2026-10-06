@@ -87,5 +87,6 @@
     });
   });
 
+  document.body.classList.add("has-fab");
   render();
 })();

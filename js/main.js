@@ -85,6 +85,18 @@
   openBio();
   window.addEventListener("hashchange", openBio);
 
+  // Back to top
+  var top = document.querySelector("[data-totop]");
+  if (top) {
+    var showTop = function () { top.classList.toggle("is-on", window.scrollY > 700); };
+    showTop();
+    window.addEventListener("scroll", showTop, { passive: true });
+    top.addEventListener("click", function () {
+      var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: 0, behavior: calm ? "auto" : "smooth" });
+    });
+  }
+
   // Prefill the "I'm interested in" select from ?interest=
   var select = document.querySelector("[data-interest]");
   if (select) {

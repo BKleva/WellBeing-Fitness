@@ -12,7 +12,7 @@
   var ticketEl = root.querySelector("[data-ticket]");
   var tabs = root.querySelectorAll("[data-tab]");
   var panels = root.querySelectorAll("[data-panel]");
-  var state = { tab: "group", n: 4, sel: { group: null, private: null, coach: "coach" }, manual: { group: false, private: false } };
+  var state = { open: false, tab: "group", n: 4, sel: { group: null, private: null, coach: "coach" }, manual: { group: false, private: false } };
 
   function $(sel, ctx) { return (ctx || root).querySelector(sel); }
   function money(v, dp) { return "$" + Number(v).toLocaleString("en-US", { minimumFractionDigits: dp ? 2 : 0, maximumFractionDigits: dp ? 2 : 0 }); }
@@ -132,8 +132,11 @@
       (pace ? '<p class="ticket__pace">' + pace + "</p>" : "") +
       '<ul class="ticket__perks">' + perks + "</ul>" +
       '<div class="ticket__cut" aria-hidden="true"></div>' +
-      cta + '<p class="ticket__how">' + how + '</p><p class="ticket__fine">' + fine + "</p></div>";
+      cta + '<p class="ticket__how">' + how + '</p><p class="ticket__fine">' + fine + "</p>" +
+      '<button class="ticket__toggle" type="button" aria-expanded="' + state.open + '"><span>' + (state.open ? "Hide details" : "Plan details") + "</span>" + chevron() + "</button></div>";
+    ticketEl.firstChild.classList.toggle("is-open", state.open);
   }
+  function chevron() { return '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>'; }
   function arrow() { return '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'; }
   function ext() { return '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4 10 14M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>'; }
   function check() { return '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12 5 5L20 6"/></svg>'; }
@@ -160,6 +163,14 @@
   });
 
   function keepFocus(name) { var c = root.querySelector('input[name="' + name + '"]:checked'); if (c) c.focus(); }
+
+  ticketEl.addEventListener("click", function (e) {
+    var t = e.target.closest(".ticket__toggle");
+    if (!t) return;
+    state.open = !state.open;
+    renderTicket();
+  });
+  document.body.classList.add("has-fab");
 
   var dial = $("#dial"), dialN = $("[data-dial-n]"), dialSub = $("[data-dial-sub]");
   function paintDial() {

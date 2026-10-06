@@ -27,10 +27,10 @@ EMAIL = "info@wellbeing-fitness.com"
 TODAY = datetime.date.today().isoformat()
 
 # Systems that live outside this static site -- change here if they move.
-SCHEDULE_URL = "https://clients.mindbodyonline.com/classic/ws?studioid=729963&stype=-7&sView=day&sLoc=0"
-PASSES_URL = "https://www.wellbeing-fitness.com/services-9"
-ACCOUNT_URL = "https://www.wellbeing-fitness.com/login-register"
-EVENTS_URL = "https://www.wellbeing-fitness.com/special-events"
+SCHEDULE_URL = "/schedule/"   # native schedule page; reservations hand off to Mindbody
+MB_SCHEDULE = "https://clients.mindbodyonline.com/classic/ws?studioid=729963&stype=-7&sView=day&sLoc=0"
+MB_EVENTS = "https://clients.mindbodyonline.com/asp/main_enroll.asp?studioid=729963&tabID=103"
+ACCOUNT_URL = "https://clients.mindbodyonline.com/consumermyinfo/?studioid=729963&tabID=2"
 BONFIRE_URL = "https://www.bonfire.com/store/wellbeing-fit-shop/"
 SOCIAL = {
     "Instagram": "https://instagram.com/wellbeingfitnessteam",
@@ -73,6 +73,7 @@ def _svg(inner, cls="ico"):
 
 ICON = {
     "arrow": _svg('<path d="M5 12h14M13 6l6 6-6 6"/>'),
+    "up": _svg('<path d="M12 19V5M5 12l7-7 7 7"/>'),
     "arrow-up": _svg('<path d="M7 17 17 7M8 7h9v9"/>'),
     "phone": _svg('<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>'),
     "mail": _svg('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>'),
@@ -188,10 +189,11 @@ def header(active=""):
     <nav class="primary" aria-label="Primary">
       <ul>
         {link("/classes/", "Classes", "classes")}
+        {link("/schedule/", "Schedule", "schedule")}
         <li class="has-menu"><button type="button" aria-expanded="false" aria-controls="menu-services" data-menu-btn{' aria-current="true"' if active == "services" else ""}>Services {_svg('<path d="m6 9 6 6 6-6"/>', "ico ico--sm")}</button>
           <div class="mega" id="menu-services"><div class="mega__grid">{mega}</div>
           <a class="mega__foot" href="/contact/">Not sure where to start? <strong>Book a free consultation</strong> {ICON["arrow"]}</a></div></li>
-        {link("/team/", "Our Team", "team")}
+        {link("/team/", "Team", "team")}
         <li class="has-menu"><button type="button" aria-expanded="false" aria-controls="menu-studios" data-menu-btn{' aria-current="true"' if active == "locations" else ""}>Studios {_svg('<path d="m6 9 6 6 6-6"/>', "ico ico--sm")}</button>
           <div class="mega mega--sm" id="menu-studios"><div class="mega__grid mega__grid--one">
             <a class="mega__item" href="/westford/">{ICON["pin"]}<span><strong>Westford</strong><small>203 B Littleton Rd</small></span></a>
@@ -203,7 +205,7 @@ def header(active=""):
       </ul>
     </nav>
     <div class="bar__cta">
-      <a class="btn btn--ghost btn--sm" href="{SCHEDULE_URL}" target="_blank" rel="noopener">Class schedule</a>
+      <a class="btn btn--ghost btn--sm" href="{SCHEDULE_URL}">Reserve a class</a>
       <a class="btn btn--sm" href="/contact/">Free consultation</a>
     </div>
     <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="drawer" data-burger><span></span><span></span></button>
@@ -212,6 +214,7 @@ def header(active=""):
 <div class="drawer" id="drawer" hidden>
   <nav aria-label="Mobile">
     <a href="/classes/">Classes</a>
+    <a href="/schedule/">Schedule</a>
     <details><summary>Services</summary><div class="drawer__sub">{drawer_services}</div></details>
     <a href="/team/">Our Team</a>
     <details><summary>Studios</summary><div class="drawer__sub"><a href="/westford/">Westford</a><a href="/groton/">Groton</a></div></details>
@@ -221,7 +224,7 @@ def header(active=""):
     <a href="/contact/">Contact</a>
   </nav>
   <div class="drawer__cta">
-    <a class="btn" href="{SCHEDULE_URL}" target="_blank" rel="noopener">Register for a class</a>
+    <a class="btn" href="{SCHEDULE_URL}">Reserve a class</a>
     <a class="btn btn--ghost" href="/contact/">Free consultation</a>
     <a class="drawer__tel" href="tel:{PHONE_TEL}">{ICON["phone"]} {PHONE}</a>
   </div>
@@ -231,30 +234,33 @@ def header(active=""):
 
 
 def footer():
-    svc = "".join(f'<li><a href="/{s["slug"]}/">{esc(s["nav"])}</a></li>' for s in SERVICES)
+    svc = " · ".join(f'<a href="/{s["slug"]}/">{esc(s["nav"])}</a>' for s in SERVICES)
     soc = "".join(f'<a href="{u}" target="_blank" rel="noopener" aria-label="{n}">{ICON[n.lower()]}</a>' for n, u in SOCIAL.items())
     return f"""</main>
 <footer class="site-footer">
-  <div class="wrap footer__grid">
+  <div class="wrap footer__main">
     <div class="footer__brand">
-      <img src="/images/logo-white.png" alt="{NAME}" width="200" height="48" loading="lazy">
-      <p>A whole-life model for building a lifestyle fueled by good health. Yoga, Pilates, Barre, personal training, nutrition and recovery in Westford and Groton, Massachusetts.</p>
+      <img src="/images/logo-white.png" alt="{NAME}" width="168" height="40" loading="lazy">
+      <p>Yoga, Pilates, Barre, training, nutrition and recovery in Westford and Groton, MA.</p>
       <div class="social">{soc}</div>
     </div>
-    <div><h3>Studios</h3>
-      <address><strong>Westford</strong><br>203 B Littleton Rd<br>Westford, MA 01886<br><a href="/westford/">Studio details</a></address>
-      <address><strong>Groton</strong><br>134 Main St<br>Groton, MA 01450<br><a href="/groton/">Studio details</a></address></div>
-    <div><h3>Services</h3><ul>{svc}</ul></div>
-    <div><h3>Explore</h3><ul>
-      <li><a href="/classes/">Classes &amp; schedule</a></li><li><a href="/memberships/">Memberships &amp; passes</a></li>
-      <li><a href="/team/">Our team</a></li><li><a href="/events/">Events</a></li><li><a href="/shop/">Fit Shop</a></li>
-      <li><a href="/policies/">Policies &amp; FAQ</a></li><li><a href="{ACCOUNT_URL}" target="_blank" rel="noopener">Log in / My account</a></li></ul>
-      <h3 class="mt">Say hello</h3>
-      <ul><li><a href="tel:{PHONE_TEL}">{PHONE}</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li></ul></div>
+    <div class="footer__cols">
+      <div><h3>Studios</h3>
+        <address><a href="/westford/"><strong>Westford</strong></a><br>203 B Littleton Rd, 01886</address>
+        <address><a href="/groton/"><strong>Groton</strong></a><br>134 Main St, 01450</address></div>
+      <div><h3>Contact</h3><ul>
+        <li><a href="tel:{PHONE_TEL}">{PHONE}</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li>
+        <li><a href="{ACCOUNT_URL}" target="_blank" rel="noopener">Member login</a></li></ul></div>
+      <div><h3>Explore</h3><ul>
+        <li><a href="/schedule/">Class schedule</a></li><li><a href="/memberships/">Memberships</a></li><li><a href="/team/">Our team</a></li>
+        <li><a href="/events/">Events</a></li><li><a href="/shop/">Fit Shop</a></li><li><a href="/policies/">Policies &amp; FAQ</a></li></ul></div>
+    </div>
   </div>
-  <div class="wrap footer__base"><span>© {datetime.date.today().year} WellBeing Fitness. All rights reserved.</span>
-    <span>Westford &amp; Groton, Massachusetts</span></div>
+  <div class="wrap footer__services"><span>Services:</span> {svc}</div>
+  <div class="wrap footer__base"><span>© {datetime.date.today().year} {NAME}</span>
+    <a class="credit" href="https://shoreworksnj.com" target="_blank" rel="noopener">Site by <img src="/images/shoreworks-logo-light.png" width="600" height="97" alt="Shore Works" loading="lazy"></a></div>
 </footer>
+<button class="totop" type="button" aria-label="Back to top" data-totop>{ICON["up"]}</button>
 <script src="/js/main.js" defer></script>
 """
 
@@ -326,7 +332,7 @@ def cta_band(title="Ready to feel your best?", text="Book a free consultation an
     return f"""<section class="cta-band"><div class="wrap cta-band__inner reveal">
   <div><p class="eyebrow eyebrow--light">Start here</p><h2>{title}</h2><p>{text}</p></div>
   <div class="cta-band__btns"><a class="btn btn--light btn--lg" href="/contact/{q}">Free consultation {ICON["arrow"]}</a>
-  <a class="btn btn--outline-light btn--lg" href="{SCHEDULE_URL}" target="_blank" rel="noopener">Browse classes</a></div></div></section>"""
+  <a class="btn btn--outline-light btn--lg" href="{SCHEDULE_URL}">Browse classes</a></div></div></section>"""
 
 
 def team_card(t, compact=False):
@@ -412,7 +418,7 @@ def page_home(shop):
       <p class="eyebrow reveal">Westford &amp; Groton, Massachusetts</p>
       <h1 class="reveal">A <em>whole-life</em> approach to feeling your best.</h1>
       <p class="lede reveal">Yoga, Pilates, Barre, personal training, nutrition and recovery under one roof. Guided by a team of specialists who see you as an individual, at any age and any stage of your health journey.</p>
-      <div class="hero__btns reveal"><a class="btn btn--lg" href="{SCHEDULE_URL}" target="_blank" rel="noopener">Register for a class {ICON["arrow"]}</a>
+      <div class="hero__btns reveal"><a class="btn btn--lg" href="{SCHEDULE_URL}">Register for a class {ICON["arrow"]}</a>
       <a class="btn btn--ghost btn--lg" href="/contact/">Free consultation</a></div>
       <ul class="hero__proof reveal"><li><strong>20+</strong><span>years leading wellness</span></li><li><strong>2</strong><span>studios, one community</span></li><li><strong>20+</strong><span>certified instructors</span></li></ul>
     </div>
@@ -567,7 +573,7 @@ def page_service(s):
     <div class="detail__main">{secs}{steps}</div>
     <aside class="detail__side reveal"><div class="sidecard"><h3>{consult_title}</h3><p>Talk with our team about your goals. The first conversation is always free.</p>
       <a class="btn btn--block" href="/contact/{q}">Request a consultation</a>
-      <a class="btn btn--ghost btn--block" href="{SCHEDULE_URL}" target="_blank" rel="noopener">See class schedule</a>
+      <a class="btn btn--ghost btn--block" href="{SCHEDULE_URL}">See class schedule</a>
       <ul class="contact-list contact-list--sm"><li>{ICON["phone"]}<a href="tel:{PHONE_TEL}">{PHONE}</a></li><li>{ICON["mail"]}<a href="mailto:{EMAIL}">{EMAIL}</a></li>
       <li>{ICON["pin"]}<span>{esc(s['locs'])}</span></li></ul></div></aside>
   </div>
@@ -614,7 +620,7 @@ def page_classes():
 <section class="page-hero"><div class="wrap page-hero__grid">
   <div class="page-hero__copy">{cr}<p class="eyebrow reveal">Group classes</p><h1 class="reveal">Move with ease. <em>Feel stronger.</em></h1>
   <p class="lede reveal">Expertly taught yoga, fitness, Pilates and Barre classes at our welcoming studio communities in Westford and Groton. Take time for yourself and find everything you need to support your well-being.</p>
-  <div class="hero__btns reveal"><a class="btn btn--lg" href="{SCHEDULE_URL}" target="_blank" rel="noopener">View live schedule {ICON["external"]}</a><a class="btn btn--ghost btn--lg" href="/memberships/">Passes &amp; memberships</a></div></div>
+  <div class="hero__btns reveal"><a class="btn btn--lg" href="{SCHEDULE_URL}">View the schedule {ICON["arrow"]}</a><a class="btn btn--ghost btn--lg" href="/memberships/">Passes &amp; memberships</a></div></div>
   <div class="page-hero__art reveal"><div class="arch arch--wide">{pic("class-warrior", "Group yoga class in warrior pose", "(min-width:900px) 40vw, 90vw", eager=True)}</div></div></div></section>
 
 <section class="section section--tight"><div class="wrap">
@@ -622,7 +628,7 @@ def page_classes():
   <ol class="steps steps--row reveal"><li><span>1</span><div><strong>Pick a class</strong><p>Explore the live schedule for Westford, Groton and online classes. Walk-ins are welcome if there's an open spot.</p></div></li>
   <li><span>2</span><div><strong>Create your account</strong><p>Booking your first class guides you through account setup and a quick participation waiver.</p></div></li>
   <li><span>3</span><div><strong>Arrive a few minutes early</strong><p>Check your class location and settle in. Plans change? Cancel up to two hours before class in your account.</p></div></li></ol>
-  <p class="center reveal"><a class="btn btn--lg" href="{SCHEDULE_URL}" target="_blank" rel="noopener">Open the class schedule {ICON["external"]}</a></p></div></section>
+  <p class="center reveal"><a class="btn btn--lg" href="{SCHEDULE_URL}">Open the class schedule {ICON["arrow"]}</a></p></div></section>
 
 <section class="section section--sand" id="styles"><div class="wrap">
   <div class="section__head reveal"><p class="eyebrow">Class styles</p><h2>Find the practice that <em>fits you.</em></h2><p>Every class offers modifications, so you can meet yourself where you are.</p></div>
@@ -735,15 +741,15 @@ def page_memberships():
   <p class="fine center reveal">Prices in USD, plus tax where applicable. Private packages of 1, 6 and 12 sessions are booked with our team. All sales on passes and training are final; membership terms are shown before you confirm.</p>
 </div></section>
 
+{gifts_block()}
 <section class="section section--tight"><div class="wrap plans plans--2">
-  <article class="plan plan--big reveal"><span class="plan__ico">{ICON["heart"]}</span><h2>Give the gift of wellness</h2><p>Gift cards for class passes, private sessions, health coaching and custom amounts are available on our Mindbody store.</p><a class="btn" href="{MB_LINK["gift"]}" target="_blank" rel="noopener">Buy a gift card {ICON["external"]}</a></article>
-  <article class="plan plan--big reveal"><span class="plan__ico">{ICON["wave"]}</span><h2>WellBeing + Radiance</h2><p>An unlimited membership pairing group classes with Radiance Wellness Living recovery services is on the way. Join the interest list and we'll tell you first.</p><a class="btn btn--ghost" href="/contact/?interest=Recovery+%C2%B7+Reiki+%C2%B7+Physical+Therapy">Join the interest list {ICON["arrow"]}</a></article>
+  <article class="plan plan--big reveal"><span class="plan__ico">{ICON["wave"]}</span><h2>WellBeing + Radiance</h2><p>An unlimited membership pairing group classes with Radiance Wellness Living recovery services is on the way. Join the interest list and we will tell you first.</p><a class="btn btn--ghost" href="/contact/?interest=Recovery+%C2%B7+Reiki+%C2%B7+Physical+Therapy">Join the interest list {ICON["arrow"]}</a></article>
 </div></section>
 {faq}
 {cta_band("Questions about the right plan?", "We'll help you choose the membership, pass or package that fits your goals and your schedule.")}
 """
     scripts = '<script src="/js/plans.js" defer></script>'
-    h = h.replace('<link rel="stylesheet" href="/css/styles.css">', '<link rel="stylesheet" href="/css/styles.css">\n<link rel="stylesheet" href="/css/plans.css">')
+    h = h.replace('<link rel="stylesheet" href="/css/styles.css">', '<link rel="stylesheet" href="/css/styles.css">\n<link rel="stylesheet" href="/css/plans.css">\n<link rel="stylesheet" href="/css/schedule.css">')
     write(path, h + body + footer() + scripts + close())
 
 
@@ -784,11 +790,11 @@ def page_location(l):
 <section class="page-hero"><div class="wrap page-hero__grid">
   <div class="page-hero__copy">{cr}<p class="eyebrow reveal">WellBeing {esc(l['name'])}</p><h1 class="reveal">Your studio in <em>{esc(l['name'])}, MA.</em></h1><p class="lede reveal">{esc(l['blurb'])}</p>
   <address class="addr reveal">{ICON['pin']}<span>{esc(l['street'])}<br>{esc(l['city'])}, {l['state']} {l['zip']}</span></address>
-  <div class="hero__btns reveal"><a class="btn btn--lg" href="https://www.google.com/maps/dir/?api=1&destination={l['map_q']}" target="_blank" rel="noopener">Get directions {ICON['external']}</a><a class="btn btn--ghost btn--lg" href="{SCHEDULE_URL}" target="_blank" rel="noopener">Class schedule</a></div></div>
+  <div class="hero__btns reveal"><a class="btn btn--lg" href="https://www.google.com/maps/dir/?api=1&destination={l['map_q']}" target="_blank" rel="noopener">Get directions {ICON['external']}</a><a class="btn btn--ghost btn--lg" href="{SCHEDULE_URL}">Class schedule</a></div></div>
   <div class="page-hero__art reveal"><div class="arch arch--wide">{pic(l['img'], f"WellBeing Fitness {l['name']} studio", "(min-width:900px) 40vw, 90vw", eager=True)}</div></div></div></section>
 <section class="section section--tight"><div class="wrap loc">
   <div class="loc__info reveal"><h2>Services at {esc(l['name'])}</h2><ul class="ticks ticks--dark ticks--cols">{svc}</ul><div class="notes">{notes}</div>
-  <p class="fine">Services vary by day and studio. See the <a href="{SCHEDULE_URL}" target="_blank" rel="noopener">live class schedule</a> or <a href="/contact/">contact us</a> to confirm.</p></div>
+  <p class="fine">Services vary by day and studio. See the <a href="{SCHEDULE_URL}">class schedule</a> or <a href="/contact/">contact us</a> to confirm.</p></div>
   <div class="loc__map reveal">{map_embed(l['map_q'], l['name'] + ' studio')}</div></div></section>
 <section class="section section--sand"><div class="wrap split">
   <div class="split__media reveal"><div class="arch">{pic(l['img2'], f"Inside the WellBeing {l['name']} studio", "(min-width:900px) 34vw, 80vw")}</div></div>
@@ -817,26 +823,203 @@ def page_locations():
     write(path, h + body + footer() + close())
 
 
+LOC_FULL = {"Westford": "Westford studio", "Groton": "Groton studio"}
+
+
+def mb_data():
+    p = os.path.join(ROOT, "data", "mindbody.json")
+    return json.load(open(p, encoding="utf8")) if os.path.exists(p) else {"generated": "", "from": "", "to": "", "classes": [], "events": []}
+
+
+def teacher_map(names):
+    alias = {"Shagufta Rahman": "Shagufta Rahmen", "Darlene Murray": "Darleen Murray", "Julia Lefebvre": "Julia"}
+    out = {}
+    for n in sorted({x for x in names if x}):
+        t = TEAM_BY_NAME.get(alias.get(n, n))
+        if t:
+            out[n] = {"slug": slugify(t["name"].split(",")[0]), "img": f"/images/team-{t['img']}.webp" if t["img"] else ""}
+    return out
+
+
+def tz_offset(iso_date):
+    """US Eastern offset for the dates this studio schedules (DST 2026-03-08 to 2026-11-01, 2027-03-14 onward)."""
+    return "-04:00" if ("2026-03-08" <= iso_date < "2026-11-01" or iso_date >= "2027-03-14") else "-05:00"
+
+
+def fmt_time(hhmm_):
+    h, m = (int(x) for x in hhmm_.split(":"))
+    return f"{(h % 12) or 12}:{m:02d} {'pm' if h >= 12 else 'am'}"
+
+
+def fmt_date(iso):
+    d = datetime.date.fromisoformat(iso)
+    return d.strftime("%A, %B ") + str(d.day)
+
+
+def event_kind(e):
+    t = (e["title"] + " " + e["desc"]).lower()
+    if "family" in t or "story" in t:
+        return "family"
+    if "sound" in t or "meditation" in t:
+        return "sound"
+    if "women" in t or "understanding" in t or "menopaus" in t:
+        return "wellness"
+    return "yoga"
+
+
+EVENT_KINDS = [("all", "All events"), ("family", "Family"), ("sound", "Sound & meditation"), ("yoga", "Yoga experiences"), ("wellness", "Wellness talks")]
+
+
+def mb_reserve(e):
+    if not e.get("id"):
+        return MB_EVENTS
+    d = datetime.date.fromisoformat(e["date"])
+    return (f"https://clients.mindbodyonline.com/ASP/res_a.asp?tg={e['tg']}&classId={e['id']}&classDate={d.month}/{d.day}/{d.year}"
+            f"&clsLoc={e['clsLoc']}&studioid=729963")
+
+
+def page_schedule():
+    path = "/schedule/"
+    title = "Class Schedule: Yoga, Pilates & Barre | WellBeing Fitness"
+    desc = "See the WellBeing Fitness class schedule for Westford and Groton, MA. Filter by studio and style, then reserve your spot in yoga, Pilates, Barre and fitness classes."
+    cr, cr_ld = crumbs([("Class Schedule", path)])
+    mb = mb_data()
+    tmap = teacher_map([c["teacher"] for c in mb["classes"]])
+    payload = {"generated": mb["generated"], "from": mb["from"], "to": mb["to"], "teachers": tmap, "mb": MB_SCHEDULE,
+               "classes": [[c["date"], c["start"], c["name"], c["teacher"], c["loc"], c["min"], c["id"], c["tg"], c["clsLoc"]] for c in mb["classes"]]}
+    # crawlable typical week (the most recent complete week in the snapshot), replaced by the interactive list once JS runs
+    last = [c for c in mb["classes"] if c["date"] > (datetime.date.fromisoformat(mb["to"]) - datetime.timedelta(days=7)).isoformat()] if mb["to"] else []
+    days = {}
+    for c in last:
+        days.setdefault(c["date"], []).append(c)
+    ssr = ""
+    for d in sorted(days):
+        rows = "".join(f'<li><span>{fmt_time(c["start"])}</span><strong>{esc(c["name"])}</strong><em>{esc(c["teacher"] or "WellBeing team")}</em><i>{esc(c["loc"] or "Online")}</i></li>' for c in days[d])
+        ssr += f'<div class="ssr-day"><h3>{datetime.date.fromisoformat(d).strftime("%A")}</h3><ul>{rows}</ul></div>'
+    ld = {"@context": "https://schema.org", "@type": "ItemList", "name": "WellBeing Fitness weekly class schedule",
+          "itemListElement": [{"@type": "ListItem", "position": i, "name": c["name"]} for i, c in enumerate(last[:40], 1)]}
+    h = head(title, desc, path, og_img=og("class-warrior"), schema=[cr_ld, ld]) + header("schedule")
+    h = h.replace('<link rel="stylesheet" href="/css/styles.css">', '<link rel="stylesheet" href="/css/styles.css">\n<link rel="stylesheet" href="/css/schedule.css">')
+    body = f"""
+<section class="page-hero page-hero--plain"><div class="wrap">{cr}<p class="eyebrow reveal">Class schedule</p><h1 class="reveal">Find your <em>class.</em></h1>
+<p class="lede reveal">Pick a day, choose a studio and a style, and reserve your spot. We'll take you to secure checkout to finish.</p></div></section>
+
+<section class="section section--tight" id="schedule"><div class="wrap">
+  <div class="sched" data-schedule>
+    <div class="sched__top">
+      <div class="days" data-days role="tablist" aria-label="Choose a day"></div>
+    </div>
+    <div class="sched__filters">
+      <div class="seg" role="group" aria-label="Studio" data-seg="loc">
+        <button type="button" class="is-on" data-v="all">Both studios</button><button type="button" data-v="Westford">Westford</button><button type="button" data-v="Groton">Groton</button></div>
+      <div class="chips-row chips-row--tight" role="group" aria-label="Class style" data-seg="type">
+        <button class="chip is-on" type="button" data-v="all">All styles</button><button class="chip" type="button" data-v="yoga">Yoga</button>
+        <button class="chip" type="button" data-v="pilates">Pilates &amp; Barre</button><button class="chip" type="button" data-v="fitness">Fitness</button>
+        <button class="chip" type="button" data-v="meditation">Meditation</button><button class="chip chip--star" type="button" data-v="easy">Beginner friendly</button></div>
+    </div>
+    <h2 class="sched__day" data-day-title aria-live="polite"></h2>
+    <div class="sched__list" data-list>
+      <div class="ssr">{ssr}</div>
+    </div>
+    <p class="sched__note" data-note></p>
+  </div>
+  <script type="application/json" id="sched-data">{json.dumps(payload, ensure_ascii=False)}</script>
+</div></section>
+
+<section class="section section--sand"><div class="wrap">
+  <div class="section__head reveal"><p class="eyebrow">Before you go</p><h2>Reserving is <em>simple.</em></h2></div>
+  <ol class="steps steps--row reveal"><li><span>1</span><div><strong>Choose your class</strong><p>Browse by day, studio or style. Not sure where to start? Tap "Beginner friendly."</p></div></li>
+  <li><span>2</span><div><strong>Reserve your spot</strong><p>We'll take you to secure checkout. First visit? You'll create an account and sign a quick waiver.</p></div></li>
+  <li><span>3</span><div><strong>Arrive a few minutes early</strong><p>Classes start on time. Plans change? Cancel up to two hours before class in your account.</p></div></li></ol>
+  <div class="plans plans--3">
+    <a class="plan reveal" href="/memberships/"><span class="plan__ico">{ICON["sparkle"]}</span><h3>Need a pass?</h3><p>Compare class passes and memberships, from $25 a class.</p><span class="card__more">See plans {ICON["arrow"]}</span></a>
+    <a class="plan reveal" href="/classes/#styles"><span class="plan__ico">{ICON["lotus"]}</span><h3>What do the styles mean?</h3><p>Slow Flow, Yin, Barre Cardio Fusion and more, explained.</p><span class="card__more">Explore styles {ICON["arrow"]}</span></a>
+    <a class="plan reveal" href="/policies/"><span class="plan__ico">{ICON["shield"]}</span><h3>Studio policies</h3><p>Cancellations, late arrivals, what to bring and where to park.</p><span class="card__more">Read policies {ICON["arrow"]}</span></a>
+  </div>
+</div></section>
+{cta_band("New to WellBeing?", "Tell us your goals and we'll point you to the right class, level and studio.")}
+"""
+    scripts = '<script src="/js/schedule.js" defer></script>'
+    write(path, h + body + footer() + scripts + close())
+
+
 def page_events():
     path = "/events/"
-    title = "Workshops, Special Events & Private Parties | WellBeing Fitness"
-    desc = "Monthly wellness workshops, sound baths, special events, multi-class series and private parties at WellBeing Fitness in Westford and Groton, MA."
+    title = "Workshops, Sound Baths & Special Events | WellBeing Fitness"
+    desc = "Upcoming WellBeing Fitness events in Groton and Westford, MA: sound baths, Full Moon Flow, family yoga, spa yoga and wellness workshops. Reserve your spot."
     cr, cr_ld = crumbs([("Events", path)])
-    h = head(title, desc, path, og_img=og("friends"), schema=[cr_ld]) + header("events")
+    mb = mb_data()
+    today = datetime.date.today().isoformat()
+    g = datetime.date.fromisoformat(mb["generated"]) if mb["generated"] else None
+    upd = f"{g.strftime('%B')} {g.day}" if g else ""
+    evs = [e for e in mb["events"]]
+    cards, ld_events, last_month = "", [], ""
+    for e in evs:
+        d = datetime.date.fromisoformat(e["date"])
+        month = d.strftime("%B %Y")
+        if month != last_month:
+            cards += f'<h2 class="ev-month" data-month>{month}</h2>'
+            last_month = month
+        kind = event_kind(e)
+        who = e["teacher"]
+        chips = "".join(f'<span class="ev__price">{esc(re.sub(r"[ (]+$", "", p))}</span>' for p in e["price"][:2])
+        desc_full = esc(e["desc"])
+        short = esc(e["desc"][:200].rsplit(" ", 1)[0] + "…") if len(e["desc"]) > 230 else desc_full
+        more = f'<details class="ev__more"><summary>Read more {ICON["plus"]}</summary><p>{desc_full}</p></details>' if len(e["desc"]) > 230 else ""
+        cards += f"""<article class="ev reveal" data-date="{e['date']}" data-kind="{kind}" data-loc="{esc(e['loc'])}">
+  <div class="ev__date"><span>{d.strftime('%b')}</span><strong>{d.day}</strong><small>{d.strftime('%a')}</small></div>
+  <div class="ev__body"><div class="ev__meta"><span class="ev__loc">{ICON['pin']}{esc(e['loc'])} studio</span><span>{fmt_time(e['start'])}{' – ' + fmt_time(e['end']) if e['end'] else ''}</span>{f'<span>with {esc(who)}</span>' if who else ''}</div>
+  <h3>{esc(e['title'])}</h3><p class="ev__desc">{short}</p>{more}{f'<div class="ev__prices">{chips}</div>' if chips else ''}</div>
+  <div class="ev__cta"><a class="btn" href="{mb_reserve(e)}" target="_blank" rel="noopener">Reserve {ICON['arrow']}</a></div></article>"""
+        if e["date"] >= today:
+            ld_events.append({"@context": "https://schema.org", "@type": "Event", "name": e["title"], "description": e["desc"][:300],
+                              "startDate": f"{e['date']}T{e['start']}:00{tz_offset(e['date'])}", "eventStatus": "https://schema.org/EventScheduled",
+                              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                              "location": {"@type": "Place", "name": f"WellBeing Fitness {e['loc']}", "address": {"@type": "PostalAddress", "addressLocality": e["loc"], "addressRegion": "MA", "addressCountry": "US"}},
+                              "organizer": {"@id": SITE + "/#org"}, "url": SITE + path})
+            if e["end"]:
+                ld_events[-1]["endDate"] = f"{e['date']}T{e['end']}:00{tz_offset(e['date'])}"
+    chips = "".join(f'<button class="chip{" is-on" if k == "all" else ""}" type="button" data-v="{k}">{v}</button>' for k, v in EVENT_KINDS)
+    h = head(title, desc, path, og_img=og("friends"), schema=[cr_ld] + ld_events) + header("events")
+    h = h.replace('<link rel="stylesheet" href="/css/styles.css">', '<link rel="stylesheet" href="/css/styles.css">\n<link rel="stylesheet" href="/css/schedule.css">')
     items = [("lotus", "Monthly workshops", "Specialty workshops and programs focused on lifestyle wellness for the whole family."),
-             ("wave", "Sound baths & restorative", "Grounding, welcoming sound-meditation experiences led by certified sound-healing practitioners."),
-             ("sparkle", "Special events & series", "Seasonal events and multi-class series to deepen your practice with the community."),
              ("people", "Private parties & groups", "Celebrate with a private yoga, fitness, Pilates, Barre or Reiki experience for your group."),
-             ("briefcase", "Corporate workshops", "Stretch & Strengthen, stress relief, meditation and nutrition workshops for your team."),
-             ("sun", "Teen programs", "Confidence-building yoga and wellness offerings for ages 11–19.")]
-    cards = "".join(f'<div class="plan reveal"><span class="plan__ico">{ICON[ic]}</span><h3>{t}</h3><p>{d}</p></div>' for ic, t, d in items)
+             ("briefcase", "Corporate workshops", "Stretch & Strengthen, stress relief, meditation and nutrition workshops for your team.")]
+    ways = "".join(f'<div class="plan reveal"><span class="plan__ico">{ICON[ic]}</span><h3>{t}</h3><p>{d_}</p></div>' for ic, t, d_ in items)
     body = f"""<section class="page-hero"><div class="wrap page-hero__grid"><div class="page-hero__copy">{cr}<p class="eyebrow reveal">Events &amp; workshops</p><h1 class="reveal">Gather. Learn. <em>Grow together.</em></h1>
-<p class="lede reveal">From monthly specialty workshops to sound baths and private celebrations, our events bring the WellBeing community together.</p>
-<div class="hero__btns reveal"><a class="btn btn--lg" href="{EVENTS_URL}" target="_blank" rel="noopener">See upcoming events {ICON['external']}</a><a class="btn btn--ghost btn--lg" href="/contact/?interest=Private+Event">Plan a private event</a></div></div>
+<p class="lede reveal">Sound baths, full-moon flows, family yoga and wellness talks. Browse what's coming up and reserve your spot.</p>
+<div class="hero__btns reveal"><a class="btn btn--lg" href="#upcoming">See upcoming events {ICON['arrow']}</a><a class="btn btn--ghost btn--lg" href="/contact/?interest=Private+Event">Plan a private event</a></div></div>
 <div class="page-hero__art reveal"><div class="arch arch--wide">{pic("friends", "Two friends laughing together outdoors", "(min-width:900px) 40vw, 90vw", eager=True)}</div></div></div></section>
-<section class="section section--tight"><div class="wrap"><div class="section__head reveal"><p class="eyebrow">Ways to gather</p><h2>Something for <em>every season.</em></h2></div><div class="plans plans--3">{cards}</div></div></section>
+
+<section class="section section--tight" id="upcoming"><div class="wrap">
+  <div class="section__head reveal"><p class="eyebrow">Upcoming</p><h2>On the <em>calendar.</em></h2></div>
+  <div class="events" data-events>
+    <div class="sched__filters">
+      <div class="seg" role="group" aria-label="Studio" data-seg="loc"><button type="button" class="is-on" data-v="all">Both studios</button><button type="button" data-v="Westford">Westford</button><button type="button" data-v="Groton">Groton</button></div>
+      <div class="chips-row chips-row--tight" role="group" aria-label="Event type" data-seg="kind">{chips}</div>
+    </div>
+    <div class="ev-list" data-ev-list>{cards}</div>
+    <p class="sched__empty" data-ev-empty hidden>No events match right now. Check back soon, or <a href="/contact/?interest=Private+Event">ask about a private event</a>.</p>
+    <p class="sched__note">Events last updated {upd}. Reservations are completed securely on Mindbody.</p>
+  </div>
+</div></section>
+
+<section class="section section--sand"><div class="wrap"><div class="section__head reveal"><p class="eyebrow">Ways to gather</p><h2>Something for <em>every group.</em></h2></div><div class="plans plans--3">{ways}</div></div></section>
 {cta_band("Hosting something special?", "Tell us about your group, date and goals and we'll help design the experience.", "Private Event")}"""
-    write(path, h + body + footer() + close())
+    scripts = '<script src="/js/events.js" defer></script>'
+    write(path, h + body + footer() + scripts + close())
+
+
+GIFTS = [("Class pass gift", "5 Class Pass, Yoga", 99, "heart"), ("Private training", "3 Private Session Starter Pack", 270, "dumbbell"),
+         ("Health coaching", "Health & Nutrition Coaching Session", 89, "leaf"), ("Spa yoga", "Spa Yoga Class for up to 6", 150, "wave")]
+
+
+def gifts_block():
+    cards = "".join(f"""<a class="gift reveal" href="{MB_LINK['gift']}" target="_blank" rel="noopener"><span class="plan__ico">{ICON[ic]}</span><small>{esc(k)}</small><strong>{esc(n)}</strong><em>{money0(pr)}</em><span class="card__more">Send as a gift {ICON['external']}</span></a>""" for k, n, pr, ic in GIFTS)
+    return f"""<section class="section section--tight"><div class="wrap">
+  <div class="section__head reveal"><p class="eyebrow">Gift cards</p><h2>Give the gift of <em>wellness.</em></h2><p>Choose a gift, then finish checkout securely on Mindbody. You can also send a custom amount good for any service.</p></div>
+  <div class="gifts">{cards}<a class="gift gift--custom reveal" href="{MB_LINK['gift']}" target="_blank" rel="noopener"><span class="plan__ico">{ICON['sparkle']}</span><small>Any amount</small><strong>Custom gift card</strong><em>You choose</em><span class="card__more">Create a gift card {ICON['external']}</span></a></div>
+</div></section>"""
 
 
 def page_policies():
@@ -878,7 +1061,7 @@ def page_thanks():
     h = head("Thank you | WellBeing Fitness", "Thanks for reaching out to WellBeing Fitness.", "/thanks/", noindex=True) + header()
     body = f"""<section class="page-hero page-hero--plain page-hero--center"><div class="wrap"><p class="eyebrow">Message received</p><h1>Thank you. <em>We'll be in touch.</em></h1>
 <p class="lede">Expect a reply within one business day. In the meantime, explore classes or meet the team.</p>
-<div class="hero__btns hero__btns--center"><a class="btn btn--lg" href="{SCHEDULE_URL}" target="_blank" rel="noopener">Browse classes</a><a class="btn btn--ghost btn--lg" href="/team/">Meet the team</a></div></div></section>"""
+<div class="hero__btns hero__btns--center"><a class="btn btn--lg" href="{SCHEDULE_URL}">Browse classes</a><a class="btn btn--ghost btn--lg" href="/team/">Meet the team</a></div></div></section>"""
     write("/thanks/", h + body + footer() + close())
 
 
@@ -992,7 +1175,7 @@ REDIRECTS = [
 
 
 def write_static():
-    pages = ["/", "/classes/", "/memberships/", "/team/", "/locations/", "/westford/", "/groton/", "/events/", "/shop/", "/policies/", "/contact/"] + [f"/{s['slug']}/" for s in SERVICES]
+    pages = ["/", "/classes/", "/schedule/", "/memberships/", "/team/", "/locations/", "/westford/", "/groton/", "/events/", "/shop/", "/policies/", "/contact/"] + [f"/{s['slug']}/" for s in SERVICES]
     pri = {"/": "1.0", "/classes/": "0.9", "/contact/": "0.8"}
     urls = "".join(f"<url><loc>{SITE}{p}</loc><lastmod>{TODAY}</lastmod><changefreq>{'weekly' if p in ('/', '/shop/') else 'monthly'}</changefreq><priority>{pri.get(p, '0.7')}</priority></url>\n" for p in pages)
     open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8").write(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
@@ -1025,6 +1208,12 @@ def write_static():
 
 [[redirects]]
   from = "/assets/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/data/*"
   to = "/404.html"
   status = 404
   force = true
@@ -1064,6 +1253,7 @@ def main():
     for s in SERVICES:
         page_service(s)
     page_classes()
+    page_schedule()
     page_memberships()
     page_team()
     page_locations()
@@ -1076,7 +1266,7 @@ def main():
     page_404()
     page_shop(shop)
     write_static()
-    print(f"built {len(SERVICES) + 12} pages; shop mode: {shop['mode']}")
+    print(f"built {len(SERVICES) + 13} pages; shop mode: {shop['mode']}")
 
 
 if __name__ == "__main__":

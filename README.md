@@ -18,6 +18,12 @@ Preview locally: launch config **WellBeingFitness** (port 8095). Deploy: drag th
 | External systems (Mindbody schedule, Wix pass checkout/login, Bonfire) | constants at the top of `tools/build.py` |
 | Design | `css/styles.css` (tokens at the top) |
 
+## Schedule, events and other Mindbody hand-offs
+Everything that used to bounce to Mindbody or the old Wix site now has a native page, and Mindbody is only the final checkout step:
+`/schedule/` (day strip, studio and style filters, per-class Reserve links), `/events/` (upcoming events with Event schema),
+`/memberships/` (Plan Studio and gift cards). The class and event data is a snapshot in `data/mindbody.json`; see `tools/mindbody_refresh.md` to refresh it.
+Member login in the footer goes to the studio's Mindbody sign-in.
+
 ## Memberships "Plan Studio"
 `/memberships/` is an interactive plan finder (`js/plans.js`, `css/plans.css`): a classes-per-month slider prices every option and flags the best value, with a membership-card summary and a checkout button. Prices live in `PLANS_*` in `tools/data.py`, copied from the studio's Mindbody online store (site 729963). Checkout links to that store; packages not sold online (private 1/6/12) route to the contact form. If Mindbody prices change, edit `data.py` and rebuild.
 
