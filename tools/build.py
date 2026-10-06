@@ -516,7 +516,7 @@ def page_service(s):
     for sh, paras in s["sections"]:
         secs += f'<section class="prose reveal"><h2>{esc(sh)}</h2>{"".join(f"<p>{p}</p>" for p in paras[:1])}</section>'
     if s["focus"]:
-        secs += f'<section class="prose reveal"><h3 class="h4">Areas of focus</h3><ul class="chips">{"".join(f"<li>{esc(x)}</li>" for x in s["focus"])}</ul></section>'
+        secs += f'<section class="prose reveal"><h3 class="h4">Areas of focus</h3><ul class="focus">{"".join(f"<li>{esc(x)}</li>" for x in s["focus"])}</ul></section>'
     if s.get("includes"):
         inc = "".join(f"<li>{ICON['check']}{esc(x)}</li>" for x in s["includes"])
         secs += f'<section class="prose reveal"><h3 class="h4">What is included</h3><ul class="ticks ticks--dark">{inc}</ul></section>'
