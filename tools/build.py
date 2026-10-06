@@ -10,6 +10,8 @@ import datetime
 import html
 import json
 import os
+import glob
+import hashlib
 import re
 from urllib.parse import quote_plus
 
@@ -182,14 +184,12 @@ def header(active=""):
         f'<a class="mega__item" href="/{s["slug"]}/">{ICON[s["icon"]]}<span><strong>{esc(s["nav"])}</strong>'
         f'<small>{esc(s["locs"])}</small></span></a>' for s in SERVICES)
     drawer_services = "".join(f'<a href="/{s["slug"]}/">{esc(s["nav"])}</a>' for s in SERVICES)
-    return f"""<div class="announce"><a href="/recovery/#radiance"><span><strong>Coming soon:</strong> Radiance Wellness Living — cold plunge, red light, sauna &amp; more at 100 Boston Rd, Groton</span><span class="announce__more">Learn more {ICON["arrow"]}</span></a></div>
-<header class="site-header" data-header>
+    return f"""<header class="site-header" data-header>
   <div class="wrap bar">
     <a class="brand" href="/" aria-label="{NAME} home"><img src="/images/logo-navy.png" alt="{NAME}" width="168" height="40"></a>
     <nav class="primary" aria-label="Primary">
       <ul>
         {link("/classes/", "Classes", "classes")}
-        {link("/schedule/", "Schedule", "schedule")}
         <li class="has-menu"><button type="button" aria-expanded="false" aria-controls="menu-services" data-menu-btn{' aria-current="true"' if active == "services" else ""}>Services {_svg('<path d="m6 9 6 6 6-6"/>', "ico ico--sm")}</button>
           <div class="mega" id="menu-services"><div class="mega__grid">{mega}</div>
           <a class="mega__foot" href="/contact/">Not sure where to start? <strong>Book a free consultation</strong> {ICON["arrow"]}</a></div></li>
@@ -205,8 +205,7 @@ def header(active=""):
       </ul>
     </nav>
     <div class="bar__cta">
-      <a class="btn btn--ghost btn--sm" href="{SCHEDULE_URL}">Reserve a class</a>
-      <a class="btn btn--sm" href="/contact/">Free consultation</a>
+      <a class="btn btn--sm" href="{SCHEDULE_URL}">Reserve a class</a>
     </div>
     <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="drawer" data-burger><span></span><span></span></button>
   </div>
@@ -214,7 +213,6 @@ def header(active=""):
 <div class="drawer" id="drawer" hidden>
   <nav aria-label="Mobile">
     <a href="/classes/">Classes</a>
-    <a href="/schedule/">Schedule</a>
     <details><summary>Services</summary><div class="drawer__sub">{drawer_services}</div></details>
     <a href="/team/">Our Team</a>
     <details><summary>Studios</summary><div class="drawer__sub"><a href="/westford/">Westford</a><a href="/groton/">Groton</a></div></details>
@@ -225,7 +223,6 @@ def header(active=""):
   </nav>
   <div class="drawer__cta">
     <a class="btn" href="{SCHEDULE_URL}">Reserve a class</a>
-    <a class="btn btn--ghost" href="/contact/">Free consultation</a>
     <a class="drawer__tel" href="tel:{PHONE_TEL}">{ICON["phone"]} {PHONE}</a>
   </div>
 </div>
@@ -256,7 +253,6 @@ def footer():
         <li><a href="/events/">Events</a></li><li><a href="/shop/">Fit Shop</a></li><li><a href="/policies/">Policies &amp; FAQ</a></li></ul></div>
     </div>
   </div>
-  <div class="wrap footer__services"><span>Services:</span> {svc}</div>
   <div class="wrap footer__base"><span>© {datetime.date.today().year} {NAME}</span>
     <a class="credit" href="https://shoreworksnj.com" target="_blank" rel="noopener">Site by <img src="/images/shoreworks-logo-light.png" width="600" height="97" alt="Shore Works" loading="lazy"></a></div>
 </footer>
@@ -273,7 +269,15 @@ def close():
     return "</body>\n</html>\n"
 
 
+def asset_version():
+    h = hashlib.md5()
+    for f in sorted(glob.glob(os.path.join(ROOT, "css", "*.css")) + glob.glob(os.path.join(ROOT, "js", "*.js"))):
+        h.update(open(f, "rb").read())
+    return h.hexdigest()[:8]
+
+
 def write(path, content):
+    content = re.sub(r'((?:href|src)=")(/(?:css|js)/[\w.-]+\.(?:css|js))(")', rf"\1\2?v={asset_version()}\3", content)
     full = os.path.join(ROOT, path.strip("/"), "index.html") if not path.endswith(".html") else os.path.join(ROOT, path.strip("/"))
     os.makedirs(os.path.dirname(full), exist_ok=True)
     with open(full, "w", encoding="utf-8", newline="\n") as f:
@@ -378,8 +382,7 @@ def page_home(shop):
            "email": EMAIL, "founder": {"@type": "Person", "name": "Scott Cassa"}, "sameAs": list(SOCIAL.values()),
            "description": desc}
     site = {"@context": "https://schema.org", "@type": "WebSite", "@id": SITE + "/#website", "url": SITE + "/", "name": NAME, "publisher": {"@id": SITE + "/#org"}}
-    faq, faq_ld = faq_block(HOME_FAQ, "Questions, answered", "Everything you need to know before your first visit.")
-    h = head(title, desc, "/", schema=[org, site] + [dict(l, **{"@context": "https://schema.org"}) for l in org_ld()] + [faq_ld],
+    h = head(title, desc, "/", schema=[org, site] + [dict(l, **{"@context": "https://schema.org"}) for l in org_ld()],
              preload="/images/studio-om-room-800.webp")
     h += header()
 
@@ -389,13 +392,6 @@ def page_home(shop):
   <span class="card__more">See classes &amp; schedule {ICON["arrow"]}</span></a>"""
     cards = classes_card + "".join(service_card(s) for s in SERVICES)
 
-    levels = [
-        ("New to movement", "Start gently, build confidence.", ["Gentle Yoga", "Slow Flow", "Restorative", "Pilates Mat-1"], "sun"),
-        ("Strong & steady", "Build strength and stamina.", ["Pilates with Weights", "Barre Fitness", "Hatha", "Yoga Sculpt"], "dumbbell"),
-        ("Deep rest", "Slow down and recover.", ["Yin", "Restorative", "Sound baths", "Reiki"], "wave"),
-    ]
-    lv = "".join(f"""<div class="level reveal">{ICON[ic]}<h3>{t}</h3><p>{d}</p><ul>{"".join(f"<li>{x}</li>" for x in xs)}</ul></div>""" for t, d, xs, ic in levels)
-
     stud = ""
     for l in LOCATIONS:
         stud += f"""<article class="studio reveal"><a class="studio__img" href="/{l['slug']}/">{pic(l['img'], f"WellBeing Fitness {l['name']} studio exterior", "(min-width:900px) 50vw, 100vw")}</a>
@@ -403,11 +399,6 @@ def page_home(shop):
   <ul class="tags">{"".join(f"<li>{esc(x)}</li>" for x in l['services'][:5])}</ul>
   <div class="studio__links"><a class="link" href="/{l['slug']}/">Studio details {ICON["arrow"]}</a>
   <a class="link" href="https://www.google.com/maps/dir/?api=1&destination={l['map_q']}" target="_blank" rel="noopener">Get directions {ICON["external"]}</a></div></div></article>"""
-
-    featured = ["Scott Cassa", "Melissa Matheson", "Chris Kandianis", "Meghan Kwartler", "Nancy Slocum", "Lisa Siemaszko"]
-    team = "".join(team_card(TEAM_BY_NAME[n], compact=True) for n in featured)
-
-    prod_html = shop_cards(shop, limit=4)
 
     body = f"""
 <section class="hero">
@@ -418,7 +409,6 @@ def page_home(shop):
       <p class="lede reveal">Yoga, Pilates, Barre, personal training, nutrition and recovery under one roof. Guided by a team of specialists who see you as an individual, at any age and any stage of your health journey.</p>
       <div class="hero__btns reveal"><a class="btn btn--lg" href="{SCHEDULE_URL}">Register for a class {ICON["arrow"]}</a>
       <a class="btn btn--ghost btn--lg" href="/contact/">Free consultation</a></div>
-      <ul class="hero__proof reveal"><li><strong>20+</strong><span>years leading wellness</span></li><li><strong>2</strong><span>studios, one community</span></li><li><strong>20+</strong><span>certified instructors</span></li></ul>
     </div>
     <div class="hero__art">
       <div class="arch reveal">{pic("studio-om-room", "Inside the WellBeing yoga studio: rows of mats, candles and a warm, quiet room", "(min-width:900px) 42vw, 90vw", eager=True)}</div>
@@ -428,8 +418,7 @@ def page_home(shop):
 </section>
 
 <section class="section" id="services">
-  <div class="wrap"><div class="section__head reveal"><p class="eyebrow">What we offer</p><h2>Everything you need to build a <em>lifestyle of good health.</em></h2>
-  <p>Movement, nourishment, recovery and community, all supported by one connected team.</p></div>
+  <div class="wrap"><div class="section__head reveal"><p class="eyebrow">What we offer</p><h2>Everything you need for a <em>lifestyle of good health.</em></h2></div>
   <div class="cards">{cards}</div></div>
 </section>
 
@@ -438,27 +427,13 @@ def page_home(shop):
     <div class="split__media reveal"><div class="plainimg">{pic("studio-yoga-light", "Bright WellBeing yoga room with mats and props", "(min-width:900px) 40vw, 90vw")}</div></div>
     <div class="split__copy reveal"><p class="eyebrow">Our philosophy</p><h2>Wellness that fits your <em>whole life.</em></h2>
     <p>Founded by Scott Cassa, a fitness trainer for more than twenty years, WellBeing Fitness grew from a simple idea: every client is an individual with their own goals, interests, health history and fitness level. That's the key to results that last a lifetime.</p>
-    <div class="pillars"><div><span>{ICON["dumbbell"]}</span><strong>Move</strong><small>Classes &amp; training</small></div><div><span>{ICON["leaf"]}</span><strong>Nourish</strong><small>Coaching &amp; meal prep</small></div><div><span>{ICON["wave"]}</span><strong>Restore</strong><small>Reiki, stretch &amp; PT</small></div><div><span>{ICON["people"]}</span><strong>Belong</strong><small>Community &amp; events</small></div></div>
     <a class="btn" href="/team/">Meet the team {ICON["arrow"]}</a></div>
   </div>
-</section>
-
-<section class="section">
-  <div class="wrap"><div class="section__head section__head--center reveal"><p class="eyebrow">Group classes</p><h2>A class for <em>every body.</em></h2>
-  <p>Not sure which class to choose? Start with the way you want to feel.</p></div>
-  <div class="levels">{lv}</div>
-  <p class="center reveal"><a class="btn btn--ghost" href="/classes/#styles">Explore all class styles {ICON["arrow"]}</a></p></div>
 </section>
 
 <section class="section section--sand">
   <div class="wrap"><div class="section__head reveal"><p class="eyebrow">Our studios</p><h2>Two welcoming homes for <em>your practice.</em></h2></div>
   <div class="studios">{stud}</div></div>
-</section>
-
-<section class="section">
-  <div class="wrap"><div class="section__head reveal"><p class="eyebrow">The team</p><h2>Specialists who <em>meet you where you are.</em></h2>
-  <p>Trainers, yoga teachers, Pilates and Barre instructors, a health coach, Reiki practitioner and physical therapist, all under one roof.</p></div>
-  <div class="minis reveal">{team}</div><p class="center"><a class="btn btn--ghost" href="/team/">Meet all {len(TEAM)} of us {ICON["arrow"]}</a></p></div>
 </section>
 
 <section class="section section--forest radiance" id="radiance">
@@ -470,22 +445,6 @@ def page_home(shop):
     <a class="btn btn--light" href="/recovery/#radiance">Be the first to know {ICON["arrow"]}</a></div>
   </div>
 </section>
-
-<section class="section">
-  <div class="wrap"><div class="section__head reveal"><p class="eyebrow">Memberships</p><h2>Flexible ways to <em>commit to yourself.</em></h2><p>Compare every option with our interactive plan finder.</p></div>
-  <div class="plans">
-    <a class="plan reveal" href="/memberships/#plan-studio"><span class="plan__ico">{ICON["sparkle"]}</span><h3>Memberships from $80/mo</h3><p>4, 8 or unlimited classes a month, with member perks and accountability.</p><span class="card__more">Details {ICON["arrow"]}</span></a>
-    <a class="plan reveal" href="/memberships/#plan-studio"><span class="plan__ico">{ICON["calendar"]}</span><h3>Class passes from $25</h3><p>Single classes and 5-, 10- and 20-packs you can share with family, at either studio.</p><span class="card__more">Details {ICON["arrow"]}</span></a>
-    <a class="plan reveal" href="/memberships/#plan-studio"><span class="plan__ico">{ICON["ring"]}</span><h3>Private &amp; reformer</h3><p>Monthly plans from $360 and 6-, 12- and 24-session packages for one-to-one training.</p><span class="card__more">Details {ICON["arrow"]}</span></a>
-  </div></div>
-</section>
-
-<section class="section section--sand shop-band">
-  <div class="wrap"><div class="section__head section__head--row reveal"><div><p class="eyebrow">The Fit Shop</p><h2>Wear the <em>studio.</em></h2><p>Comfortable active wear and more for a wellness life.</p></div><div class="hero__btns" style="margin:0"><a class="btn btn--ghost" href="/shop/">Browse the shop {ICON["arrow"]}</a>{f'<a class="btn" href="{BONFIRE_URL}" target="_blank" rel="noopener">Shop on Bonfire {ICON["external"]}</a>' if shop['mode'] == 'bonfire' else ''}</div></div>
-  <div class="products products--4">{prod_html}</div></div>
-</section>
-
-{faq}
 
 <section class="section consult" id="consult">
   <div class="wrap consult__grid">
@@ -553,8 +512,7 @@ def page_service(s):
             f'<li><span>{i}</span><div><strong>{esc(t)}</strong><p>{esc(d)}</p></div></li>' for i, (t, d) in enumerate(s["steps"], 1)) + "</ol></section>"
 
     reformer = reformer_table() if s.get("show_reformer") else ""
-    team = "".join(team_card(TEAM_BY_NAME[n], compact=True) for n in s["team"])
-    rel = "".join(service_card(SVC[r]) for r in s["related"])
+    team = "".join(f'<li><a href="/team/#{slugify(n.split(",")[0])}">{esc(n.split(",")[0])}</a></li>' for n in s["team"])
     consult_title = {"recovery": "Book recovery"}.get(s["slug"], "Get started")
 
     body = f"""
@@ -564,7 +522,6 @@ def page_service(s):
     <div class="hero__btns reveal"><a class="btn btn--lg" href="/contact/{q}">Free consultation {ICON["arrow"]}</a><a class="btn btn--ghost btn--lg" href="tel:{PHONE_TEL}">{ICON["phone"]} {PHONE}</a></div></div>
     <div class="page-hero__art reveal"><div class="arch arch--wide">{pic(s['img'], s['img_alt'], "(min-width:900px) 40vw, 90vw", eager=True)}</div></div>
   </div>
-  <div class="wrap"><div class="facts reveal">{facts}</div></div>
 </section>
 <section class="section section--tight">
   <div class="wrap detail">
@@ -579,10 +536,8 @@ def page_service(s):
 {sub}
 {rad}
 {reformer}
-<section class="section section--sand"><div class="wrap"><div class="section__head reveal"><p class="eyebrow">Your team</p><h2>Meet the people behind it.</h2></div>
-<div class="minis reveal">{team}</div></div></section>
+<section class="section section--tight"><div class="wrap"><p class="eyebrow">Your team</p><ul class="names reveal">{team}</ul></div></section>
 {faq}
-<section class="section"><div class="wrap"><div class="section__head reveal"><p class="eyebrow">Keep exploring</p><h2>More ways to <em>feel well.</em></h2></div><div class="cards cards--3">{rel}</div></div></section>
 {cta_band(interest=s["interest"])}
 """
     write(path, h + body + footer() + close())
@@ -621,13 +576,6 @@ def page_classes():
   <div class="hero__btns reveal"><a class="btn btn--lg" href="{SCHEDULE_URL}">View the schedule {ICON["arrow"]}</a><a class="btn btn--ghost btn--lg" href="/memberships/">Passes &amp; memberships</a></div></div>
   <div class="page-hero__art reveal"><div class="arch arch--wide">{pic("class-warrior", "Group yoga class in warrior pose", "(min-width:900px) 40vw, 90vw", eager=True)}</div></div></div></section>
 
-<section class="section section--tight"><div class="wrap">
-  <div class="section__head reveal"><p class="eyebrow">How to join</p><h2>Reserve in three <em>simple steps.</em></h2></div>
-  <ol class="steps steps--row reveal"><li><span>1</span><div><strong>Pick a class</strong><p>Explore the live schedule for Westford, Groton and online classes. Walk-ins are welcome if there's an open spot.</p></div></li>
-  <li><span>2</span><div><strong>Create your account</strong><p>Booking your first class guides you through account setup and a quick participation waiver.</p></div></li>
-  <li><span>3</span><div><strong>Arrive a few minutes early</strong><p>Check your class location and settle in. Plans change? Cancel up to two hours before class in your account.</p></div></li></ol>
-  <p class="center reveal"><a class="btn btn--lg" href="{SCHEDULE_URL}">Open the class schedule {ICON["arrow"]}</a></p></div></section>
-
 <section class="section section--sand" id="styles"><div class="wrap">
   <div class="section__head reveal"><p class="eyebrow">Class styles</p><h2>Find the practice that <em>fits you.</em></h2><p>Every class offers modifications, so you can meet yourself where you are.</p></div>
   <div class="chips-row reveal" role="group" aria-label="Filter class styles" data-filter-group="styles">{chips}</div>
@@ -641,12 +589,6 @@ def page_classes():
   <li>{ICON["check"]}<span><strong>Where to put things:</strong> cubbies and hangers in the studio lobby for belongings and shoes.</span></li>
   <li>{ICON["check"]}<span><strong>Who can join:</strong> weekly classes are for ages 15+, with Teen and Tween programs for ages 11+.</span></li></ul>
   <a class="btn btn--ghost" href="/policies/">Studio policies {ICON["arrow"]}</a></div></div></section>
-
-<section class="section section--forest"><div class="wrap split split--rev">
-  <div class="split__media reveal"><div class="plainimg">{pic("yin-block", "Person resting in a restorative yoga pose with a block", "(min-width:900px) 34vw, 80vw")}</div></div>
-  <div class="split__copy reveal"><p class="eyebrow eyebrow--light">Prefer a more personal experience?</p><h2>Private sessions &amp; <em>events</em></h2>
-  <p>Looking for guidance shaped around your goals? We offer private instruction by appointment in fitness, yoga, Pilates, Barre and Reiki, along with private parties and events.</p>
-  <div class="hero__btns"><a class="btn btn--light" href="/personal-training/">Private training</a><a class="btn btn--outline-light" href="/events/">Private events</a></div></div></div></section>
 
 <section class="section"><div class="wrap"><div class="section__head reveal"><p class="eyebrow">Your teachers</p><h2>Yoga, Pilates &amp; Barre <em>instructors.</em></h2></div>
 <ul class="names reveal">{inst}</ul></div></section>
@@ -729,15 +671,6 @@ def page_memberships():
   <script type="application/json" id="plans-data">{json.dumps(plans)}</script>
 </div></section>
 
-<section class="section section--sand"><div class="wrap">
-  <div class="section__head reveal"><p class="eyebrow">Every option at a glance</p><h2>The full <em>price list.</em></h2><p>Passes and memberships are purchased on our secure Mindbody store, where you can also manage your account and book classes.</p></div>
-  <div class="plists">
-    {price_list("Memberships", mem_rows, "membership", "Join on Mindbody")}
-    {price_list("Class passes", pass_rows, "pass", "Buy a pass")}
-    {price_list("Private &amp; coaching", priv_rows, "membership", "See plans")}
-  </div>
-  <p class="fine center reveal">Prices in USD, plus tax where applicable. Private packages of 1, 6 and 12 sessions are booked with our team. All sales on passes and training are final; membership terms are shown before you confirm.</p>
-</div></section>
 
 {gifts_block()}
 <section class="section section--tight"><div class="wrap plans plans--2">
@@ -924,17 +857,6 @@ def page_schedule():
   <script type="application/json" id="sched-data">{json.dumps(payload, ensure_ascii=False)}</script>
 </div></section>
 
-<section class="section section--sand"><div class="wrap">
-  <div class="section__head reveal"><p class="eyebrow">Before you go</p><h2>Reserving is <em>simple.</em></h2></div>
-  <ol class="steps steps--row reveal"><li><span>1</span><div><strong>Choose your class</strong><p>Browse by day, studio or style. Not sure where to start? Tap "Beginner friendly."</p></div></li>
-  <li><span>2</span><div><strong>Reserve your spot</strong><p>We'll take you to secure checkout. First visit? You'll create an account and sign a quick waiver.</p></div></li>
-  <li><span>3</span><div><strong>Arrive a few minutes early</strong><p>Classes start on time. Plans change? Cancel up to two hours before class in your account.</p></div></li></ol>
-  <div class="plans plans--3">
-    <a class="plan reveal" href="/memberships/"><span class="plan__ico">{ICON["sparkle"]}</span><h3>Need a pass?</h3><p>Compare class passes and memberships, from $25 a class.</p><span class="card__more">See plans {ICON["arrow"]}</span></a>
-    <a class="plan reveal" href="/classes/#styles"><span class="plan__ico">{ICON["lotus"]}</span><h3>What do the styles mean?</h3><p>Slow Flow, Yin, Barre Cardio Fusion and more, explained.</p><span class="card__more">Explore styles {ICON["arrow"]}</span></a>
-    <a class="plan reveal" href="/policies/"><span class="plan__ico">{ICON["shield"]}</span><h3>Studio policies</h3><p>Cancellations, late arrivals, what to bring and where to park.</p><span class="card__more">Read policies {ICON["arrow"]}</span></a>
-  </div>
-</div></section>
 {cta_band("New to WellBeing?", "Tell us your goals and we'll point you to the right class, level and studio.")}
 """
     scripts = '<script src="/js/schedule.js" defer></script>'
@@ -1002,7 +924,6 @@ def page_events():
   </div>
 </div></section>
 
-<section class="section section--sand"><div class="wrap"><div class="section__head reveal"><p class="eyebrow">Ways to gather</p><h2>Something for <em>every group.</em></h2></div><div class="plans plans--3">{ways}</div></div></section>
 {cta_band("Hosting something special?", "Tell us about your group, date and goals and we'll help design the experience.", "Private Event")}"""
     scripts = '<script src="/js/events.js" defer></script>'
     write(path, h + body + footer() + scripts + close())
@@ -1050,8 +971,7 @@ def page_contact():
   <li>{ICON['pin']}<div><small>Westford</small>203 B Littleton Rd, Westford, MA 01886</div></li>
   <li>{ICON['pin']}<div><small>Groton</small>134 Main St, Groton, MA 01450</div></li></ul>
   <p class="small">Health coaching &amp; nutrition: <a href="mailto:melissa@wellbeing-fitness.com">melissa@wellbeing-fitness.com</a></p></div>
-  <div class="consult__card reveal">{consult_form("contact")}</div></div></section>
-<section class="section section--sand"><div class="wrap maps">{maps}</div></section>"""
+  <div class="consult__card reveal">{consult_form("contact")}</div></div></section>"""
     write(path, h + body + footer() + close())
 
 
@@ -1190,12 +1110,12 @@ def write_static():
 [[headers]]
   for = "/css/*"
   [headers.values]
-    Cache-Control = "public, max-age=3600"
+    Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
   for = "/js/*"
   [headers.values]
-    Cache-Control = "public, max-age=3600"
+    Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
   for = "/*"

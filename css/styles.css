@@ -615,3 +615,17 @@ a.plan:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
 .poster, .poster img { border-radius: 0; }
 .av, .av img { border-radius: 0; }
 .hero__plate { border-radius: 0; }
+
+
+/* ---------- Simplified UI: sharp, quiet, no motion for its own sake ---------- */
+.js .reveal, .js .hero__plate.reveal { opacity: 1; transform: none; transition: none; }
+.section { padding: clamp(3rem, 6vw, 5.5rem) 0; }
+.section--tight { padding: clamp(2rem, 4vw, 3.2rem) 0; }
+.btn, .chip, .seg, .seg button, .tag, .badge, .opt__badge, .ev__price, .names a, .ptabs, .ptab, .day, .freq__b, .burger, .totop, .social a, .cart-fab, .cart-fab__n { border-radius: 2px; }
+.btn:hover { transform: none; box-shadow: none; }
+.card, .plan, .gift, .ev, .cls, .style, .level, .person, .studio, .product, .sidecard, .consult__card, .price, .plist, .ticket, .pstudio, .sched, .sub__img, .faq__icon { border-radius: 2px; box-shadow: none; }
+.card:hover, .plan:hover, .gift:hover, .ev:hover, .cls:hover, .style:hover, .product:hover, .studio:hover { transform: none; box-shadow: none; }
+.cls:hover, .ev:hover, .style:hover { border-color: var(--navy); }
+.opt, .opt__dot, .trial, .field input, .field select, .field textarea, .form .btn { border-radius: 2px; }
+.opt__dot, .opt__dot::after { border-radius: 50%; }
+.site-header.is-stuck { box-shadow: none; }
