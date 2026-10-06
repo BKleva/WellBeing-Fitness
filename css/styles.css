@@ -604,3 +604,14 @@ a.plan:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
 .card--text.card--feature p { color: #cbd3ec; }
 .card--text.card--feature .card__ico { color: var(--clay-soft); }
 .card--text.card--feature:hover { border-color: var(--clay-soft); }
+
+/* ---------- Every photo is a square ---------- */
+.arch, .arch--wide, .sub__img, .studio__img, .person__img, .mini__img, .product__media, .page-hero .arch { aspect-ratio: 1 / 1; border-radius: 0; }
+.plainimg img { aspect-ratio: 1 / 1; border-radius: 0; }
+.monogram, .person__img .monogram { aspect-ratio: 1 / 1; }
+.studio, .person, .product { border-radius: 0; }
+.studio__img img, .person__img img, .sub__img img, .arch img, .mini__img img, .plainimg img { border-radius: 0; }
+.mini__img { max-width: none; }
+.poster, .poster img { border-radius: 0; }
+.av, .av img { border-radius: 0; }
+.hero__plate { border-radius: 0; }
