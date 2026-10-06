@@ -918,3 +918,9 @@ body.menu-open .reservebar { display: none; }
 .index a.index__go:hover { padding: 0.7rem 1rem; color: var(--black); }
 .index .index__go .ico { width: 14px; height: 14px; justify-self: auto; }
 @media (max-width: 720px) { .site-footer.has-bar ~ .totop { width: 40px; height: 40px; right: 10px; bottom: 58px; } }
+
+.footer__social { grid-column: 1 / -1; display: flex; gap: 0.6rem; margin: 0; }
+@media (max-width: 720px) {
+  .footer__brand { display: block; }
+  .footer__social { justify-content: center; padding-top: 0.9rem; border-top: 1px solid rgba(255, 255, 255, 0.12); }
+}

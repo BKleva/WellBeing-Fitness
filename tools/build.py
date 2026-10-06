@@ -245,7 +245,6 @@ def footer(bar=True):
   <div class="wrap footer__main">
     <div class="footer__brand">
       <img src="/images/logo-white.png" alt="{NAME}" width="168" height="40" loading="lazy">
-      <div class="social">{soc}</div>
     </div>
     <div class="footer__cols">
       <div><h3>Studios</h3>
@@ -258,6 +257,7 @@ def footer(bar=True):
         <li><a href="/schedule/">Class schedule</a></li><li><a href="/memberships/">Memberships</a></li><li><a href="/team/">Our team</a></li>
         <li><a href="/events/">Events</a></li><li><a href="/shop/">Fit Shop</a></li><li><a href="/policies/">Policies &amp; FAQ</a></li></ul></div>
     </div>
+    <div class="social footer__social">{soc}</div>
   </div>
   <div class="wrap footer__base"><span>© {datetime.date.today().year} {NAME}</span>
     <a class="credit" href="https://shoreworksnj.com" target="_blank" rel="noopener">Site by <img src="/images/shoreworks-logo-light.png" width="600" height="97" alt="Shore Works" loading="lazy"></a></div>
