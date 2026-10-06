@@ -16,13 +16,14 @@
     var setDrawer = function (open) {
       burger.setAttribute("aria-expanded", String(open));
       burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      var lab = burger.querySelector("[data-menu-label]");
+      if (lab) lab.textContent = open ? "Close" : "Menu";
       drawer.hidden = !open;
       document.body.classList.toggle("menu-open", open);
       document.body.style.overflow = open ? "hidden" : "";
     };
     burger.addEventListener("click", function () { setDrawer(drawer.hidden); });
     drawer.addEventListener("click", function (e) { if (e.target.closest("a")) setDrawer(false); });
-    window.addEventListener("resize", function () { if (window.innerWidth > 1020) setDrawer(false); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !drawer.hidden) setDrawer(false); });
   }
 
