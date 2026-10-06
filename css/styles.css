@@ -944,3 +944,8 @@ body.menu-open .reservebar { display: none; }
 .offer__head p:not(.kicker) { color: var(--muted); font-size: 1.1rem; margin: 1rem 0 0; }
 .hero-full { min-height: 72vh; min-height: 72svh; }
 @media (max-width: 720px) { .hero-full { min-height: 80vh; min-height: 80svh; } }
+
+.hero-full { min-height: 100vh; min-height: 100svh; }
+.drawer__grid--two { grid-template-columns: 1.4fr 1fr; max-width: 980px; }
+.link--light { color: #fff; }
+@media (max-width: 1020px) { .drawer__grid--two { grid-template-columns: 1fr; } }

@@ -207,20 +207,15 @@ def header(active=""):
   </div>
 </header>
 <div class="drawer" id="drawer" hidden>
-  <div class="drawer__grid">
+  <div class="drawer__grid drawer__grid--two">
     <nav class="drawer__col drawer__col--big" aria-label="Main">
-      <a href="/#offer">What we offer</a>
+      <a href="/offer/">What we offer</a>
       <a href="/schedule/">Class schedule</a>
       <a href="/memberships/">Memberships</a>
       <a href="/events/">Events</a>
       <a href="/team/">Our team</a>
       <a href="/shop/">Fit shop</a>
       <a href="/contact/">Contact</a>
-    </nav>
-    <nav class="drawer__col" aria-label="Services">
-      <h2>What we offer</h2>
-      <a href="/classes/">Yoga, Pilates &amp; Barre</a>
-      {svc}
     </nav>
     <div class="drawer__col">
       <h2>Studios</h2>
@@ -387,6 +382,23 @@ def marquee(words, dark=False):
     return f'<div class="marquee{" marquee--dark" if dark else ""}" aria-hidden="true"><div class="marquee__track"><div>{unit}</div><div>{unit}</div></div></div>'
 
 
+def services_index():
+    return "".join(f'<li><a class="index__main" href="/{x["slug"]}/"><span class="index__n">{i:02d}</span><strong>{esc(x["card"])}</strong><em>{esc(x["short"])}</em></a>'
+                   f'<a class="index__go" href="/contact/{qs(x["interest"])}">Sign up {ICON["arrow"]}</a></li>' for i, x in enumerate(SERVICES, 1))
+
+
+def class_lists():
+    def first_sentence(t):
+        t = t.split(". ")[0].rstrip(".")
+        return t if len(t) < 120 else t[:117].rsplit(" ", 1)[0] + "…"
+    out = ""
+    for g, label in [("yoga", "Yoga"), ("pilates", "Pilates & Barre")]:
+        rows_ = "".join(f'<li><div><strong>{esc(c["name"])}</strong><span class="lvl">{esc(c["level"])}</span><p>{esc(first_sentence(c["text"]))}</p></div>'
+                        f'<a class="index__go index__go--dark" href="{SCHEDULE_URL}?type={g}">Reserve {ICON["arrow"]}</a></li>' for c in CLASS_STYLES if c["group"] == g)
+        out += f'<h3 class="offer__group reveal">{label}</h3><ul class="offer reveal">{rows_}</ul>'
+    return out
+
+
 def page_home(shop):
     title = "WellBeing Fitness | Yoga, Pilates & Training in Westford, MA"
     desc = "A whole-life wellness studio in Westford & Groton, MA: yoga, Pilates, Barre, personal training, nutrition and recovery for every age. Free consultation."
@@ -399,18 +411,7 @@ def page_home(shop):
     h = h.replace("<body>", '<body class="is-home">', 1)
     h += header()
 
-    index = "".join(f'<li><a class="index__main" href="/{x["slug"]}/"><span class="index__n">{i:02d}</span><strong>{esc(x["card"])}</strong><em>{esc(x["short"])}</em></a>'
-                    f'<a class="index__go" href="/contact/{qs(x["interest"])}">Sign up {ICON["arrow"]}</a></li>' for i, x in enumerate(SERVICES, 1))
-
-    def first_sentence(t):
-        t = t.split(". ")[0].rstrip(".")
-        return t if len(t) < 120 else t[:117].rsplit(" ", 1)[0] + "…"
-    groups = [("yoga", "Yoga"), ("pilates", "Pilates & Barre")]
-    cls_html = ""
-    for g, label in groups:
-        rows_ = "".join(f'<li><div><strong>{esc(c["name"])}</strong><span class="lvl">{esc(c["level"])}</span><p>{esc(first_sentence(c["text"]))}</p></div>'
-                        f'<a class="index__go index__go--dark" href="{SCHEDULE_URL}?type={g}">Reserve {ICON["arrow"]}</a></li>' for c in CLASS_STYLES if c["group"] == g)
-        cls_html += f'<h3 class="offer__group reveal">{label}</h3><ul class="offer reveal">{rows_}</ul>'
+    index = services_index()
 
     plan = {p["id"]: p for p in PLANS_GROUP}
     pick = [("New to WellBeing", "One-month trial", TRIAL["price"], "one month, any class", MB_LINK["pass"]),
@@ -449,25 +450,78 @@ def page_home(shop):
 </section>
 {marquee(["Breathe", "Move", "Restore"])}
 
-<section class="section" id="offer"><div class="wrap">
-  <div class="offer__head reveal"><p class="kicker">What we offer</p><h2>Find your class. <em>Sign up in a tap.</em></h2>
-  <p>Every group class we teach, with the level and what to expect. Reserve straight from the list.</p></div>
-  <div class="kickrow reveal"><p class="kicker">Group classes</p><a class="link" href="{SCHEDULE_URL}">Full schedule {ICON["arrow"]}</a></div>
-  {cls_html}
-</div></section>
-
 <section class="section section--ink" id="services"><div class="wrap">
-  <p class="kicker kicker--light reveal">More ways to work with us</p>
+  <div class="kickrow reveal"><p class="kicker kicker--light">What we offer</p><a class="link link--light" href="/offer/">All classes &amp; services {ICON["arrow"]}</a></div>
   <ol class="index reveal">{index}</ol>
 </div></section>
+{marquee(["Start where you are", "Stay for the whole life"], dark=True)}
+
+<section class="section" id="memberships"><div class="wrap">
+  <div class="kickrow reveal"><p class="kicker">Memberships &amp; passes</p><a class="link" href="/memberships/">Compare all plans {ICON["arrow"]}</a></div>
+  <div class="pks reveal">{plans}</div>
+</div></section>
+
+{events}
+
+<section class="section section--sand" id="team"><div class="wrap">
+  <div class="kickrow reveal"><p class="kicker">Meet the team</p><a class="link" href="/team/">All {len(TEAM)} of us {ICON["arrow"]}</a></div>
+  <div class="minis minis--six reveal">{team}</div>
+</div></section>
+
+<section class="section" id="studios"><div class="wrap">
+  <p class="kicker reveal">Two studios</p>
+  <div class="studios">{stud}</div></div>
+</section>
+
+<section class="section section--forest radiance" id="radiance">
+  <div class="wrap split split--rev">
+    <div class="split__media reveal"><div class="poster">{pic("radiance-poster", "Radiance Wellness Living announcement poster: cold plunge, red light therapy, saunas, hyperbaric and compression, coming soon to 100 Boston Rd, Groton", "(min-width:900px) 34vw, 80vw")}</div></div>
+    <div class="split__copy reveal"><p class="eyebrow eyebrow--light">Coming soon to Groton</p><h2>Radiance <em>Wellness Living</em></h2>
+    <p>A new recovery and wellness experience designed to help you restore, recharge and feel your best, at 100 Boston Rd in Groton.</p>
+    <ul class="ticks"><li>{ICON["check"]}Cold plunge</li><li>{ICON["check"]}Red light therapy</li><li>{ICON["check"]}Saunas</li><li>{ICON["check"]}Hyperbaric</li><li>{ICON["check"]}Compression &amp; more</li></ul>
+    <a class="btn btn--light" href="/recovery/#radiance">Be the first to know {ICON["arrow"]}</a></div>
+  </div>
+</section>
+
+<section class="section consult" id="consult">
+  <div class="wrap consult__grid">
+    <div class="reveal"><p class="kicker">Free consultation</p><h2>Let's find your starting point.</h2>
+    <p>Tell us a little about your goals and we'll help you choose the right class, coach or program. No pressure, just a conversation.</p>
+    <ul class="contact-list"><li>{ICON["phone"]}<a href="tel:{PHONE_TEL}">{PHONE}</a></li><li>{ICON["mail"]}<a href="mailto:{EMAIL}">{EMAIL}</a></li><li>{ICON["pin"]}<span>203 B Littleton Rd, Westford · 134 Main St, Groton</span></li></ul></div>
+    <div class="consult__card reveal">{consult_form("home-consult", compact=True)}</div>
+  </div>
+</section>
 """
     scripts = shop_scripts(shop["cfg"]) if shop["mode"] == "shopify" else ""
     write("/", h + body + footer() + scripts + close())
 
 
+def page_offer():
+    path = "/offer/"
+    title = "What We Offer: Classes, Training & Wellness | WellBeing"
+    desc = "Every WellBeing Fitness class and service in Westford & Groton, MA: yoga, Pilates, Barre, training, nutrition, women's wellness and recovery. Reserve or sign up."
+    cr, cr_ld = crumbs([("What we offer", path)])
+    h = head(title, desc, path, og_img=og("class-warrior"), schema=[cr_ld]) + header("offer")
+    body = f"""
+<section class="page-hero page-hero--plain"><div class="wrap">{cr}<p class="eyebrow reveal">What we offer</p><h1 class="reveal">Find your class. <em>Sign up in a tap.</em></h1>
+<p class="lede reveal">Every group class we teach, with the level and what to expect, plus our one-on-one and wellness services. Reserve or sign up straight from the list.</p></div></section>
+
+<section class="section section--tight" id="classes"><div class="wrap">
+  <div class="kickrow reveal"><p class="kicker">Group classes</p><a class="link" href="{SCHEDULE_URL}">Full schedule {ICON["arrow"]}</a></div>
+  {class_lists()}
+</div></section>
+
+<section class="section section--ink" id="services"><div class="wrap">
+  <p class="kicker kicker--light reveal">Training, coaching &amp; wellness</p>
+  <ol class="index reveal">{services_index()}</ol>
+</div></section>
+"""
+    write(path, h + body + footer() + close())
+
+
 def page_service(s):
     path = f"/{s['slug']}/"
-    cr, cr_ld = crumbs([("Services", "/#services"), (s["nav"], path)])
+    cr, cr_ld = crumbs([("What we offer", "/offer/"), (s["nav"], path)])
     faq, faq_ld = faq_block(s["faq"][:2], f"{s['card']}: common questions")
     svc_ld = {"@context": "https://schema.org", "@type": "Service", "name": s["card"], "serviceType": s["card"], "description": s["desc"],
               "url": SITE + path, "provider": {"@id": SITE + "/#org"},
@@ -1088,8 +1142,8 @@ REDIRECTS = [
 
 
 def write_static():
-    pages = ["/", "/classes/", "/schedule/", "/memberships/", "/team/", "/locations/", "/westford/", "/groton/", "/events/", "/shop/", "/policies/", "/contact/"] + [f"/{s['slug']}/" for s in SERVICES]
-    pri = {"/": "1.0", "/classes/": "0.9", "/contact/": "0.8"}
+    pages = ["/", "/offer/", "/classes/", "/schedule/", "/memberships/", "/team/", "/locations/", "/westford/", "/groton/", "/events/", "/shop/", "/policies/", "/contact/"] + [f"/{s['slug']}/" for s in SERVICES]
+    pri = {"/": "1.0", "/offer/": "0.9", "/classes/": "0.9", "/contact/": "0.8"}
     urls = "".join(f"<url><loc>{SITE}{p}</loc><lastmod>{TODAY}</lastmod><changefreq>{'weekly' if p in ('/', '/shop/') else 'monthly'}</changefreq><priority>{pri.get(p, '0.7')}</priority></url>\n" for p in pages)
     open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8").write(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
     open(os.path.join(ROOT, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\nDisallow: /thanks/\n\nSitemap: {SITE}/sitemap.xml\n")
@@ -1166,6 +1220,7 @@ def main():
     for s in SERVICES:
         page_service(s)
     page_classes()
+    page_offer()
     page_schedule()
     page_memberships()
     page_team()
