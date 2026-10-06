@@ -424,7 +424,7 @@ def page_home(shop):
     </div>
     <div class="hero__art">
       <div class="arch reveal">{pic("studio-om-room", "Inside the WellBeing yoga studio: rows of mats, candles and a warm, quiet room", "(min-width:900px) 42vw, 90vw", eager=True)}</div>
-      <div class="hero__logo reveal"><img src="/images/logo-navy.png" alt="WellBeing Fitness" width="770" height="184"></div>
+      <div class="hero__logo"><div class="hero__plate reveal"><img src="/images/logo-navy.png" alt="WellBeing Fitness" width="770" height="184"></div></div>
     </div>
   </div>
 </section>

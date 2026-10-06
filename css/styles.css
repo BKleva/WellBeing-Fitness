@@ -144,10 +144,13 @@ body.menu-open .site-header { position: fixed; top: 0; left: 0; right: 0; backgr
 .hero__proof strong { font: 500 2.6rem/1 var(--serif); color: var(--navy); }
 .hero__proof span { font-size: 0.86rem; color: var(--muted); max-width: 12ch; line-height: 1.35; }
 .hero__art { position: relative; justify-self: end; width: min(100%, 520px); }
-.hero__logo { position: absolute; inset: 0; margin: auto; height: fit-content; width: 50%; padding: 0.9rem 1.2rem; border-radius: 20px; background: rgba(247, 242, 234, 0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 18px 40px -18px rgba(15, 29, 77, 0.5); border: 1px solid rgba(255, 255, 255, 0.7); z-index: 2; }
-.hero__logo img { width: 100%; height: auto; }
-.js .hero__logo.reveal { transform: translateY(26px); }
-.js .hero__logo.reveal.is-in { transform: none; transition-delay: 0.25s; animation: float 7s ease-in-out 1.4s infinite; }
+.hero__logo { position: absolute; top: 50%; left: 50%; width: 50%; transform: translate(-50%, -50%); z-index: 2; pointer-events: none; }
+.hero__plate { padding: 0.9rem 1.2rem; border-radius: 20px; background: rgba(247, 242, 234, 0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 22px 44px -16px rgba(15, 29, 77, 0.55); border: 1px solid rgba(255, 255, 255, 0.7); }
+.hero__plate img { width: 100%; height: auto; }
+.js .hero__plate.reveal { transform: translateY(26px); }
+.js .hero__plate.reveal.is-in { transform: none; transition-delay: 0.25s; animation: bob 4.5s ease-in-out 1.2s infinite; }
+@keyframes bob-soft { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
 .arch { border-radius: 999px 999px var(--r-lg) var(--r-lg); overflow: hidden; aspect-ratio: 4 / 5; box-shadow: var(--shadow-lg); background: var(--sand); }
 .arch img { width: 100%; height: 100%; object-fit: cover; }
 .arch--wide { aspect-ratio: 5 / 5.4; }
@@ -492,7 +495,8 @@ a.plan:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .js .reveal { opacity: 1; transform: none; transition: none; }
-  .ticker__track, .hero__badge, .announce__dot, .hero__logo { animation: none !important; }
+  .ticker__track, .hero__badge, .announce__dot { animation: none !important; }
+  .js .hero__plate.reveal.is-in { animation: bob-soft 8s ease-in-out 1.2s infinite; }
   * { transition-duration: 0.01ms !important; }
 }
 
