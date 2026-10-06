@@ -563,16 +563,7 @@ def page_service(s):
     <div class="page-hero__art reveal"><div class="arch arch--wide">{pic(s['img'], s['img_alt'], "(min-width:900px) 40vw, 90vw", eager=True)}</div></div>
   </div>
 </section>
-<section class="section section--tight">
-  <div class="wrap detail">
-    <div class="detail__main">{secs}</div>
-    <aside class="detail__side reveal"><div class="sidecard"><h3>{consult_title}</h3><p>Talk with our team about your goals. The first conversation is always free.</p>
-      <a class="btn btn--block" href="/contact/{q}">Request a consultation</a>
-      <a class="btn btn--ghost btn--block" href="{SCHEDULE_URL}">See class schedule</a>
-      <ul class="contact-list contact-list--sm"><li>{ICON["phone"]}<a href="tel:{PHONE_TEL}">{PHONE}</a></li><li>{ICON["mail"]}<a href="mailto:{EMAIL}">{EMAIL}</a></li>
-      <li>{ICON["pin"]}<span>{esc(s['locs'])}</span></li></ul></div></aside>
-  </div>
-</section>
+{f'<section class="section section--tight"><div class="wrap detail detail--solo"><div class="detail__main">{secs}</div></div></section>' if secs else ''}
 {sub}
 {rad}
 {reformer}
