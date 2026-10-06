@@ -939,3 +939,8 @@ body.menu-open .reservebar { display: none; }
   .footer__base { padding: 0.65rem 0 0.8rem; font-size: 0.76rem; }
 }
 @media (min-width: 721px) { .footer__cols { grid-template-columns: 1fr 1fr 1.5fr; } .footer__cols > div:last-child ul { columns: 2; column-gap: 1.2rem; } }
+
+.offer__head { max-width: 760px; margin-bottom: 2.4rem; }
+.offer__head p:not(.kicker) { color: var(--muted); font-size: 1.1rem; margin: 1rem 0 0; }
+.hero-full { min-height: 72vh; min-height: 72svh; }
+@media (max-width: 720px) { .hero-full { min-height: 80vh; min-height: 80svh; } }

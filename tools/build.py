@@ -209,6 +209,7 @@ def header(active=""):
 <div class="drawer" id="drawer" hidden>
   <div class="drawer__grid">
     <nav class="drawer__col drawer__col--big" aria-label="Main">
+      <a href="/#offer">What we offer</a>
       <a href="/schedule/">Class schedule</a>
       <a href="/memberships/">Memberships</a>
       <a href="/events/">Events</a>
@@ -448,8 +449,10 @@ def page_home(shop):
 </section>
 {marquee(["Breathe", "Move", "Restore"])}
 
-<section class="section" id="classes"><div class="wrap">
-  <div class="kickrow reveal"><p class="kicker">What we offer · Group classes</p><a class="link" href="{SCHEDULE_URL}">Full schedule {ICON["arrow"]}</a></div>
+<section class="section" id="offer"><div class="wrap">
+  <div class="offer__head reveal"><p class="kicker">What we offer</p><h2>Find your class. <em>Sign up in a tap.</em></h2>
+  <p>Every group class we teach, with the level and what to expect. Reserve straight from the list.</p></div>
+  <div class="kickrow reveal"><p class="kicker">Group classes</p><a class="link" href="{SCHEDULE_URL}">Full schedule {ICON["arrow"]}</a></div>
   {cls_html}
 </div></section>
 
@@ -457,43 +460,6 @@ def page_home(shop):
   <p class="kicker kicker--light reveal">More ways to work with us</p>
   <ol class="index reveal">{index}</ol>
 </div></section>
-{marquee(["Start where you are", "Stay for the whole life"], dark=True)}
-
-<section class="section" id="memberships"><div class="wrap">
-  <div class="kickrow reveal"><p class="kicker">Memberships &amp; passes</p><a class="link" href="/memberships/">Compare all plans {ICON["arrow"]}</a></div>
-  <div class="pks reveal">{plans}</div>
-</div></section>
-
-{events}
-
-<section class="section section--sand" id="team"><div class="wrap">
-  <div class="kickrow reveal"><p class="kicker">Meet the team</p><a class="link" href="/team/">All {len(TEAM)} of us {ICON["arrow"]}</a></div>
-  <div class="minis minis--six reveal">{team}</div>
-</div></section>
-
-<section class="section" id="studios"><div class="wrap">
-  <p class="kicker reveal">Two studios</p>
-  <div class="studios">{stud}</div></div>
-</section>
-
-<section class="section section--forest radiance" id="radiance">
-  <div class="wrap split split--rev">
-    <div class="split__media reveal"><div class="poster">{pic("radiance-poster", "Radiance Wellness Living announcement poster: cold plunge, red light therapy, saunas, hyperbaric and compression, coming soon to 100 Boston Rd, Groton", "(min-width:900px) 34vw, 80vw")}</div></div>
-    <div class="split__copy reveal"><p class="eyebrow eyebrow--light">Coming soon to Groton</p><h2>Radiance <em>Wellness Living</em></h2>
-    <p>A new recovery and wellness experience designed to help you restore, recharge and feel your best, at 100 Boston Rd in Groton.</p>
-    <ul class="ticks"><li>{ICON["check"]}Cold plunge</li><li>{ICON["check"]}Red light therapy</li><li>{ICON["check"]}Saunas</li><li>{ICON["check"]}Hyperbaric</li><li>{ICON["check"]}Compression &amp; more</li></ul>
-    <a class="btn btn--light" href="/recovery/#radiance">Be the first to know {ICON["arrow"]}</a></div>
-  </div>
-</section>
-
-<section class="section consult" id="consult">
-  <div class="wrap consult__grid">
-    <div class="reveal"><p class="kicker">Free consultation</p><h2>Let's find your starting point.</h2>
-    <p>Tell us a little about your goals and we'll help you choose the right class, coach or program. No pressure, just a conversation.</p>
-    <ul class="contact-list"><li>{ICON["phone"]}<a href="tel:{PHONE_TEL}">{PHONE}</a></li><li>{ICON["mail"]}<a href="mailto:{EMAIL}">{EMAIL}</a></li><li>{ICON["pin"]}<span>203 B Littleton Rd, Westford · 134 Main St, Groton</span></li></ul></div>
-    <div class="consult__card reveal">{consult_form("home-consult", compact=True)}</div>
-  </div>
-</section>
 """
     scripts = shop_scripts(shop["cfg"]) if shop["mode"] == "shopify" else ""
     write("/", h + body + footer() + scripts + close())
