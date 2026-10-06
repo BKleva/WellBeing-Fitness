@@ -43,33 +43,12 @@ SOCIAL = {
 esc = html.escape
 
 HERO_ART = '''<svg class="hero__backdrop" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
-  <defs>
-    <clipPath id="hb-top"><rect x="0" y="0" width="600" height="300"/></clipPath>
-    <clipPath id="hb-bot"><rect x="0" y="300" width="600" height="300"/></clipPath>
-  </defs>
-  <g class="hb-rings" fill="none" stroke="#172961" stroke-width="1.2" clip-path="url(#hb-top)">
-    <circle class="hb-r1" cx="300" cy="300" r="272" opacity=".22"/>
-    <circle class="hb-r2" cx="300" cy="300" r="216" opacity=".3"/>
-    <circle class="hb-r3" cx="300" cy="300" r="160" opacity=".4"/>
-    <circle class="hb-r4" cx="300" cy="300" r="106" stroke="#9a6f45" opacity=".75"/>
-  </g>
-  <path class="hb-sun" d="M248 300 A52 52 0 0 1 352 300 Z" fill="#9a6f45" opacity=".9"/>
-  <line x1="110" y1="300" x2="588" y2="300" stroke="#172961" stroke-width="1.6" opacity=".7"/>
-  <g class="hb-reflect" fill="none" stroke="#172961" stroke-width="1.2" clip-path="url(#hb-bot)" stroke-dasharray="16 12">
-    <circle cx="300" cy="300" r="106" stroke="#9a6f45" opacity=".45"/>
-    <circle cx="300" cy="300" r="160" opacity=".22"/>
-    <circle cx="300" cy="300" r="216" opacity=".16"/>
-    <circle cx="300" cy="300" r="272" opacity=".1"/>
-  </g>
-  <g fill="none" stroke="#9a6f45" stroke-width="2" stroke-linecap="round">
-    <path d="M255 314 h90" opacity=".5"/><path d="M270 322 h60" opacity=".34"/><path d="M282 330 h36" opacity=".2"/>
-  </g>
-  <g class="hb-waves" fill="none" stroke="#172961" stroke-width="1.2" stroke-linecap="round">
-    <path d="M100 330 q20 -6 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" opacity="0.34"/>
-    <path d="M140 352 q20 -6 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" opacity="0.28"/>
-    <path d="M180 376 q20 -6 40 0 t40 0 t40 0 t40 0 t40 0 t40 0" opacity="0.22"/>
-    <path d="M220 402 q20 -6 40 0 t40 0 t40 0 t40 0" opacity="0.17"/>
-    <path d="M240 430 q20 -6 40 0 t40 0 t40 0" opacity="0.12"/>
+  <g class="hb-rings" fill="none" stroke="#172961" stroke-width="1.2">
+    <circle cx="300" cy="300" r="50" opacity="0.55"/>
+    <circle cx="300" cy="300" r="105" opacity="0.46"/>
+    <circle cx="300" cy="300" r="165" opacity="0.38"/>
+    <circle cx="300" cy="300" r="230" opacity="0.3"/>
+    <circle cx="300" cy="300" r="295" opacity="0.22"/>
   </g>
 </svg>
 '''
