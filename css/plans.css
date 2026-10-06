@@ -1,7 +1,7 @@
 /* WellBeing Fitness: Plan Studio (memberships page only) */
 .sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 html:not(.js) .pstudio { display: none; }
-.pstudio { display: grid; grid-template-columns: 1.3fr 0.8fr; gap: clamp(1.4rem, 3vw, 2.6rem); padding: clamp(1.2rem, 3vw, 2.4rem); border-radius: 40px; color: #e3e7f4; position: relative; overflow: hidden; align-items: start;
+.pstudio { display: grid; grid-template-columns: 1.3fr 0.8fr; gap: clamp(1.4rem, 3vw, 2.6rem); padding: clamp(1.2rem, 3vw, 2.4rem); border-radius: 6px; color: #e3e7f4; position: relative; overflow: hidden; align-items: start;
   background: var(--forest-deep); box-shadow: var(--shadow-lg); }
 .pstudio a { color: var(--clay-soft); }
 .pstudio > * { min-width: 0; }
@@ -34,7 +34,7 @@ html:not(.js) .pstudio { display: none; }
 .dial__hint { margin: 0.8rem 0 0; font-size: 0.92rem; color: #a9b5dc; }
 
 .freq { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem; margin-top: 0.4rem; }
-.freq__b { display: grid; gap: 0.2rem; text-align: left; padding: 1rem 1.1rem; border-radius: 18px; border: 1.5px solid rgba(255, 255, 255, 0.16); background: rgba(255, 255, 255, 0.05); color: #fff; cursor: pointer; transition: all 0.25s var(--ease); }
+.freq__b { display: grid; gap: 0.2rem; text-align: left; padding: 1rem 1.1rem; border-radius: 6px; border: 1.5px solid rgba(255, 255, 255, 0.16); background: rgba(255, 255, 255, 0.05); color: #fff; cursor: pointer; transition: all 0.25s var(--ease); }
 .freq__b strong { font: 500 1.35rem/1.1 var(--serif); }
 .freq__b small { color: #a9b5dc; font-size: 0.82rem; }
 .freq__b:hover { border-color: var(--clay-soft); }
@@ -42,7 +42,7 @@ html:not(.js) .pstudio { display: none; }
 .freq__b.is-on small { color: var(--muted); }
 
 .opts { border: 0; padding: 0; margin: 0 0 1.2rem; display: grid; gap: 0.6rem; min-width: 0; }
-.opt { position: relative; display: grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: center; padding: 1rem 1.2rem; border-radius: 20px; border: 1.5px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.05); cursor: pointer; transition: transform 0.25s var(--ease), background 0.25s, border-color 0.25s, opacity 0.25s; }
+.opt { position: relative; display: grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: center; padding: 1rem 1.2rem; border-radius: 6px; border: 1.5px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.05); cursor: pointer; transition: transform 0.25s var(--ease), background 0.25s, border-color 0.25s, opacity 0.25s; }
 .opt:hover { border-color: rgba(227, 196, 156, 0.7); transform: translateX(3px); }
 .opt input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
 .opt:focus-within { outline: 2px solid var(--clay-soft); outline-offset: 2px; }
@@ -68,16 +68,16 @@ html:not(.js) .pstudio { display: none; }
 .opt.is-off:hover { transform: none; }
 .opt.is-off .opt__cost--off small { color: #c9a98a; }
 
-.trial { display: flex; gap: 0.9rem; align-items: flex-start; padding: 1rem 1.2rem; border-radius: 20px; border: 1.5px dashed rgba(227, 196, 156, 0.55); font-size: 0.95rem; }
+.trial { display: flex; gap: 0.9rem; align-items: flex-start; padding: 1rem 1.2rem; border-radius: 6px; border: 1.5px dashed rgba(227, 196, 156, 0.55); font-size: 0.95rem; }
 .trial > span { flex: none; color: var(--clay-soft); margin-top: 2px; }
 .trial p { margin: 0; color: #d3d9ee; }
 .trial strong { color: #fff; font-weight: 500; }
 
 /* membership-card ticket */
 .pticket { position: sticky; top: 110px; }
-.ticket { position: relative; background: var(--cream); color: var(--text); border-radius: 28px; padding: 1.6rem 1.7rem 1.5rem; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6); animation: ticket-in 0.45s var(--ease); }
+.ticket { position: relative; background: var(--cream); color: var(--text); border-radius: 6px; padding: 1.6rem 1.7rem 1.5rem; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6); animation: ticket-in 0.45s var(--ease); }
 @keyframes ticket-in { from { opacity: 0.4; transform: translateY(8px) scale(0.99); } }
-.ticket__top { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 0.9rem; margin: -0.4rem -0.5rem 1.2rem; border-radius: 16px; background: var(--navy); }
+.ticket__top { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 0.9rem; margin: -0.4rem -0.5rem 1.2rem; border-radius: 6px; background: var(--navy); }
 .ticket__top img { width: 128px; height: auto; }
 .ticket__tag { font: 500 0.68rem/1 var(--sans); letter-spacing: 0.18em; text-transform: uppercase; color: var(--clay-soft); }
 .ticket__name { font-size: 2.1rem; color: var(--ink); line-height: 1.05; }
@@ -112,12 +112,12 @@ html:not(.js) .pstudio { display: none; }
 .plist li em { font: 400 0.8rem var(--sans); color: var(--muted); font-style: normal; margin-left: 2px; }
 
 @media (max-width: 1020px) {
-  .pstudio { display: block; border-radius: 32px; overflow: visible; }
+  .pstudio { display: block; border-radius: 6px; overflow: visible; }
   .pticket { position: sticky; top: auto; bottom: 10px; z-index: 6; margin-top: 1rem; }
   .plists { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
-  .pstudio { padding: 0.9rem; border-radius: 26px; }
+  .pstudio { padding: 0.9rem; border-radius: 6px; }
   .ptabs { display: flex; width: 100%; margin-bottom: 1.1rem; overflow: visible; }
   .ptab { flex: 1; justify-content: center; padding: 0.6rem 0.3rem; font-size: 0.86rem; }
   .ptab .ico, .ptab i { display: none; }
@@ -130,11 +130,11 @@ html:not(.js) .pstudio { display: none; }
   .dial__range { height: 36px; }
   .dial__hint { display: none; }
   .freq { grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
-  .freq__b { padding: 0.65rem 0.7rem; border-radius: 14px; }
+  .freq__b { padding: 0.65rem 0.7rem; border-radius: 6px; }
   .freq__b strong { font-size: 1.05rem; }
   .freq__b small { font-size: 0.7rem; }
   .opts { gap: 0.4rem; margin-bottom: 0.8rem; }
-  .opt { grid-template-columns: auto 1fr auto; gap: 0.7rem; padding: 0.65rem 0.8rem; border-radius: 14px; }
+  .opt { grid-template-columns: auto 1fr auto; gap: 0.7rem; padding: 0.65rem 0.8rem; border-radius: 6px; }
   .opt:hover { transform: none; }
   .opt__dot { width: 18px; height: 18px; }
   .opt__dot::after { width: 8px; height: 8px; }
@@ -146,10 +146,10 @@ html:not(.js) .pstudio { display: none; }
   .opt__cost strong { font-size: 1.3rem; }
   .opt__cost small { font-size: 0.66rem; max-width: 15ch; }
   .opt.is-off .opt__cost--off small { max-width: 17ch; }
-  .trial { padding: 0.7rem 0.85rem; font-size: 0.82rem; border-radius: 14px; gap: 0.6rem; }
+  .trial { padding: 0.7rem 0.85rem; font-size: 0.82rem; border-radius: 6px; gap: 0.6rem; }
 
   /* sticky plan bar: name + price + checkout always in reach, details on demand */
-  .ticket { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 0.8rem; padding: 0.75rem 0.9rem; border-radius: 20px; box-shadow: 0 -10px 34px -10px rgba(0, 0, 0, 0.55); }
+  .ticket { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 0.8rem; padding: 0.75rem 0.9rem; border-radius: 6px; box-shadow: 0 -10px 34px -10px rgba(0, 0, 0, 0.55); }
   .ticket__top, .ticket__sub, .ticket__pace, .ticket__perks, .ticket__cut, .ticket__how, .ticket__fine { display: none; }
   .ticket__name { grid-column: 1; grid-row: 1; font-size: 1.15rem; }
   .ticket__price { grid-column: 1; grid-row: 2; margin: 0; }

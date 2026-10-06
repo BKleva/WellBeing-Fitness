@@ -350,10 +350,9 @@ def team_card(t, compact=False):
 
 def service_card(s, feature=False):
     cls = " card--feature" if feature else ""
-    return f"""<a class="card{cls} reveal" href="/{s['slug']}/">
-  <span class="card__img">{pic(s['img'] + "", s['img_alt'], "(min-width:900px) 33vw, 100vw")}</span>
-  <span class="card__body"><span class="card__ico">{ICON[s['icon']]}</span><h3>{esc(s['card'])}</h3><p>{esc(s['short'])}</p>
-  <span class="card__more">Explore {ICON["arrow"]}</span></span></a>"""
+    return f"""<a class="card card--text{cls} reveal" href="/{s['slug']}/">
+  <span class="card__ico">{ICON[s['icon']]}</span><h3>{esc(s['card'])}</h3><p>{esc(s['short'])}</p>
+  <span class="card__more">Explore {ICON["arrow"]}</span></a>"""
 
 
 def org_ld():
@@ -384,11 +383,10 @@ def page_home(shop):
              preload="/images/studio-om-room-800.webp")
     h += header()
 
-    classes_card = f"""<a class="card card--feature card--classes reveal" href="/classes/">
-  <span class="card__img">{pic("class-warrior", "Yoga class in warrior pose in a bright studio", "(min-width:900px) 66vw, 100vw")}</span>
-  <span class="card__body"><span class="card__ico">{ICON["lotus"]}</span><h3>Yoga, Pilates &amp; Barre Classes</h3>
+    classes_card = f"""<a class="card card--text card--feature card--classes reveal" href="/classes/">
+  <span class="card__ico">{ICON["lotus"]}</span><h3>Yoga, Pilates &amp; Barre Classes</h3>
   <p>Expertly taught group classes in Westford and Groton, from gentle and restorative to dynamic vinyasa and barre cardio.</p>
-  <span class="card__more">See classes &amp; schedule {ICON["arrow"]}</span></span></a>"""
+  <span class="card__more">See classes &amp; schedule {ICON["arrow"]}</span></a>"""
     cards = classes_card + "".join(service_card(s) for s in SERVICES)
 
     levels = [
@@ -406,7 +404,7 @@ def page_home(shop):
   <div class="studio__links"><a class="link" href="/{l['slug']}/">Studio details {ICON["arrow"]}</a>
   <a class="link" href="https://www.google.com/maps/dir/?api=1&destination={l['map_q']}" target="_blank" rel="noopener">Get directions {ICON["external"]}</a></div></div></article>"""
 
-    featured = ["Scott Cassa", "Melissa Matheson", "Chris Kandianis", "Meghan Kwartler", "Nancy Slocum", "Lisa Siemaszko", "Eleonora Cordovani", "Krista Simon, MPT"]
+    featured = ["Scott Cassa", "Melissa Matheson", "Chris Kandianis", "Meghan Kwartler", "Nancy Slocum", "Lisa Siemaszko"]
     team = "".join(team_card(TEAM_BY_NAME[n], compact=True) for n in featured)
 
     prod_html = shop_cards(shop, limit=4)
@@ -437,7 +435,7 @@ def page_home(shop):
 
 <section class="section section--sand">
   <div class="wrap split">
-    <div class="split__media reveal"><div class="collage">{pic("studio-yoga-light", "Bright WellBeing yoga room with mats and props", "(min-width:900px) 40vw, 90vw", cls="collage__a")}{pic("kettlebells", "Rack of colorful kettlebells in the training studio", "(min-width:900px) 20vw, 50vw", cls="collage__b")}</div></div>
+    <div class="split__media reveal"><div class="plainimg">{pic("studio-yoga-light", "Bright WellBeing yoga room with mats and props", "(min-width:900px) 40vw, 90vw")}</div></div>
     <div class="split__copy reveal"><p class="eyebrow">Our philosophy</p><h2>Wellness that fits your <em>whole life.</em></h2>
     <p>Founded by Scott Cassa, a fitness trainer for more than twenty years, WellBeing Fitness grew from a simple idea: every client is an individual with their own goals, interests, health history and fitness level. That's the key to results that last a lifetime.</p>
     <div class="pillars"><div><span>{ICON["dumbbell"]}</span><strong>Move</strong><small>Classes &amp; training</small></div><div><span>{ICON["leaf"]}</span><strong>Nourish</strong><small>Coaching &amp; meal prep</small></div><div><span>{ICON["wave"]}</span><strong>Restore</strong><small>Reiki, stretch &amp; PT</small></div><div><span>{ICON["people"]}</span><strong>Belong</strong><small>Community &amp; events</small></div></div>
@@ -615,7 +613,7 @@ def page_classes():
     h = head(title, desc, path, og_img=og("class-warrior"), schema=[cr_ld, faq_ld, cls_ld], preload="/images/class-warrior-800.webp") + header("classes")
     chips = '<button class="chip is-on" data-filter="all" type="button">All styles</button><button class="chip" data-filter="yoga" type="button">Yoga</button><button class="chip" data-filter="pilates" type="button">Pilates &amp; Barre</button>'
     grid = "".join(f"""<article class="style reveal" data-group="{c['group']}"><div class="style__top"><h3>{esc(c['name'])}</h3><span class="badge">{esc(c['level'])}</span></div><p>{esc(c['text'])}</p></article>""" for c in CLASS_STYLES)
-    inst = "".join(team_card(t, compact=True) for t in TEAM if set(t["tags"]) & {"yoga", "pilates"})
+    inst = "".join(f'<li><a href="/team/#{slugify(t["name"].split(",")[0])}">{esc(t["name"].split(",")[0])}</a></li>' for t in TEAM if set(t["tags"]) & {"yoga", "pilates"})
     body = f"""
 <section class="page-hero"><div class="wrap page-hero__grid">
   <div class="page-hero__copy">{cr}<p class="eyebrow reveal">Group classes</p><h1 class="reveal">Move with ease. <em>Feel stronger.</em></h1>
@@ -636,7 +634,7 @@ def page_classes():
   <div class="styles" data-filter-target="styles">{grid}</div></div></section>
 
 <section class="section"><div class="wrap split">
-  <div class="split__media reveal"><div class="collage">{pic("studio-om-room", "Candlelit yoga studio set for class", "(min-width:900px) 40vw, 90vw", cls="collage__a")}{pic("prop-shelf", "Shelves of yoga bolsters, blocks and mats", "(min-width:900px) 20vw, 50vw", cls="collage__b")}</div></div>
+  <div class="split__media reveal"><div class="plainimg">{pic("studio-om-room", "Candlelit yoga studio set for class", "(min-width:900px) 40vw, 90vw")}</div></div>
   <div class="split__copy reveal"><p class="eyebrow">Your first visit</p><h2>Come as you are.</h2>
   <ul class="ticks ticks--dark"><li>{ICON["check"]}<span><strong>What to bring:</strong> a mat and water bottle if you like. We have mats, water and all the props you need: blankets, blocks and more.</span></li>
   <li>{ICON["check"]}<span><strong>What to wear:</strong> anything that feels comfortable to move and relax in.</span></li>
@@ -645,13 +643,13 @@ def page_classes():
   <a class="btn btn--ghost" href="/policies/">Studio policies {ICON["arrow"]}</a></div></div></section>
 
 <section class="section section--forest"><div class="wrap split split--rev">
-  <div class="split__media reveal"><div class="arch">{pic("yin-block", "Person resting in a restorative yoga pose with a block", "(min-width:900px) 34vw, 80vw")}</div></div>
+  <div class="split__media reveal"><div class="plainimg">{pic("yin-block", "Person resting in a restorative yoga pose with a block", "(min-width:900px) 34vw, 80vw")}</div></div>
   <div class="split__copy reveal"><p class="eyebrow eyebrow--light">Prefer a more personal experience?</p><h2>Private sessions &amp; <em>events</em></h2>
   <p>Looking for guidance shaped around your goals? We offer private instruction by appointment in fitness, yoga, Pilates, Barre and Reiki, along with private parties and events.</p>
   <div class="hero__btns"><a class="btn btn--light" href="/personal-training/">Private training</a><a class="btn btn--outline-light" href="/events/">Private events</a></div></div></div></section>
 
 <section class="section"><div class="wrap"><div class="section__head reveal"><p class="eyebrow">Your teachers</p><h2>Yoga, Pilates &amp; Barre <em>instructors.</em></h2></div>
-<div class="minis reveal">{inst}</div></div></section>
+<ul class="names reveal">{inst}</ul></div></section>
 {faq}
 {cta_band("Not sure where to begin?", "Tell us what you're looking for and we'll recommend the right class, level and studio.")}
 """
