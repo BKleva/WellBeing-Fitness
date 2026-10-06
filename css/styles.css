@@ -638,3 +638,26 @@ h1 { font-weight: 300; }
 .card--text.card--feature { background: var(--navy); border-color: var(--navy); }
 .names a { background: #fff; }
 .tags li, .chips li, .level li { background: var(--cream); }
+
+
+/* ---------- Hero backdrop artwork ---------- */
+.hero--text { position: relative; overflow: hidden; }
+.hero--text .hero__grid { position: relative; z-index: 1; }
+.hero__backdrop { position: absolute; right: -11vw; top: 50%; width: min(58vw, 780px); height: auto; transform: translateY(-50%); pointer-events: none; z-index: 0; }
+.hb-rings circle { transform-origin: 300px 300px; animation: hb-breathe 11s ease-in-out infinite alternate; }
+.hb-rings .hb-r2 { animation-delay: -2.5s; }
+.hb-rings .hb-r3 { animation-delay: -5s; }
+.hb-rings .hb-r4 { animation-delay: -7.5s; }
+.hb-sun { transform-origin: 300px 300px; animation: hb-rise 9s ease-in-out infinite alternate; }
+.hb-reflect { animation: hb-drift 28s linear infinite; }
+.hb-waves path { animation: hb-ripple 7s ease-in-out infinite alternate; }
+.hb-waves path:nth-child(2) { animation-delay: -1.4s; }
+.hb-waves path:nth-child(3) { animation-delay: -2.8s; }
+.hb-waves path:nth-child(4) { animation-delay: -4.2s; }
+.hb-waves path:nth-child(5) { animation-delay: -5.6s; }
+@keyframes hb-breathe { from { transform: scale(0.985); } to { transform: scale(1.02); } }
+@keyframes hb-rise { from { transform: translateY(5px); } to { transform: translateY(-4px); } }
+@keyframes hb-drift { to { stroke-dashoffset: -280; } }
+@keyframes hb-ripple { from { transform: translateX(-6px); } to { transform: translateX(6px); } }
+@media (max-width: 760px) { .hero__backdrop { width: 120vw; right: -48vw; top: 62%; opacity: 0.55; } }
+@media (prefers-reduced-motion: reduce) { .hb-rings circle, .hb-sun, .hb-reflect, .hb-waves path { animation: none; } }
