@@ -43,7 +43,7 @@ html:not(.js) .pstudio { display: none; }
 
 .opts { border: 0; padding: 0; margin: 0 0 1.2rem; display: grid; gap: 0.6rem; min-width: 0; }
 .opt { position: relative; display: grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: center; padding: 1rem 1.2rem; border-radius: 6px; border: 1.5px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.05); cursor: pointer; transition: transform 0.25s var(--ease), background 0.25s, border-color 0.25s, opacity 0.25s; }
-.opt:hover { border-color: rgba(227, 196, 156, 0.7); transform: translateX(3px); }
+.opt:hover { border-color: rgba(169, 192, 238, 0.7); transform: translateX(3px); }
 .opt input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
 .opt:focus-within { outline: 2px solid var(--clay-soft); outline-offset: 2px; }
 .opt__dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.4); display: grid; place-items: center; transition: all 0.25s; }
@@ -66,9 +66,9 @@ html:not(.js) .pstudio { display: none; }
 .opt.is-on .opt__meter i { background: var(--forest); }
 .opt.is-off { opacity: 0.55; }
 .opt.is-off:hover { transform: none; }
-.opt.is-off .opt__cost--off small { color: #c9a98a; }
+.opt.is-off .opt__cost--off small { color: #a9c0ee; }
 
-.trial { display: flex; gap: 0.9rem; align-items: flex-start; padding: 1rem 1.2rem; border-radius: 6px; border: 1.5px dashed rgba(227, 196, 156, 0.55); font-size: 0.95rem; }
+.trial { display: flex; gap: 0.9rem; align-items: flex-start; padding: 1rem 1.2rem; border-radius: 6px; border: 1.5px dashed rgba(169, 192, 238, 0.55); font-size: 0.95rem; }
 .trial > span { flex: none; color: var(--clay-soft); margin-top: 2px; }
 .trial p { margin: 0; color: #d3d9ee; }
 .trial strong { color: #fff; font-weight: 500; }

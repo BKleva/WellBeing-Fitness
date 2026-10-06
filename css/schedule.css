@@ -30,7 +30,7 @@
 .cls__main h3 { font-size: 1.5rem; margin-bottom: 0.4rem; }
 .cls__tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.5rem; }
 .tag { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.04em; padding: 0.22rem 0.6rem; border-radius: 999px; background: rgba(23, 41, 97, 0.08); color: var(--navy); }
-.tag--pilates { background: rgba(160, 109, 61, 0.14); color: #7a4f24; }
+.tag--pilates { background: rgba(45, 95, 179, 0.14); color: #2d5fb3; }
 .tag--fitness { background: rgba(15, 29, 77, 0.92); color: #fff; }
 .tag--meditation { background: rgba(143, 163, 214, 0.28); color: #2b3f86; }
 .tag--easy { background: transparent; border: 1px solid var(--line); color: var(--muted); }
@@ -80,7 +80,7 @@
 .ev__more[open] summary { margin-bottom: 0.5rem; }
 .ev__more p { color: var(--muted); font-size: 0.95rem; line-height: 1.65; }
 .ev__prices { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.4rem; }
-.ev__price { font-size: 0.82rem; font-weight: 500; padding: 0.3rem 0.7rem; border-radius: 999px; background: rgba(160, 109, 61, 0.14); color: #7a4f24; }
+.ev__price { font-size: 0.82rem; font-weight: 500; padding: 0.3rem 0.7rem; border-radius: 999px; background: rgba(45, 95, 179, 0.14); color: #2d5fb3; }
 .ev__cta { align-self: center; }
 
 /* gift cards */
